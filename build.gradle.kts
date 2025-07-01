@@ -1,28 +1,31 @@
-val version = "0.0.1"
-
-defaultTasks("build")
+defaultTasks("shadowJar")
 
 allprojects {
-    apply(plugin = "java")
+    version = (System.getenv("VERSION") ?: "dev")
 
-    repositories {
-        mavenCentral()
-        maven("https://jitpack.io")
-    }
+    apply(plugin = "java")
 
     tasks.withType<JavaCompile> {
         sourceCompatibility = JavaVersion.VERSION_17.toString()
         targetCompatibility = JavaVersion.VERSION_17.toString()
     }
+}
+
+subprojects {
+    repositories {
+        mavenCentral()
+
+        maven("https://jitpack.io")
+    }
 
     dependencies {
-        "compileOnly"(rootProject.libs.socialismus)
-
         // lombok
         "compileOnly"(rootProject.libs.lombok)
         "annotationProcessor"(rootProject.libs.lombok)
 
         // general
         "compileOnly"(rootProject.libs.guice)
+        "compileOnly"(rootProject.libs.adventure)
+        "compileOnly"(rootProject.libs.socialismus)
     }
 }
