@@ -19,5 +19,11 @@
       "type": "BASE"
     }
   ],
+  "updater": {
+    "dev": {
+      "provider": "GITHUB",
+      "id": "whereareiam/Essentials"
+    }
+  },
   "main": "me.whereareiam.socialismus.module.essentials.Essentials"
 }
