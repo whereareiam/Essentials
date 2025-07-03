@@ -33,7 +33,7 @@ public class FeaturesCommand extends CommandBase {
 	@CommandCooldown("%cooldown." + COMMAND_NAME)
 	@Permission("%permission." + COMMAND_NAME)
 	public void onCommand(DummyPlayer dummyPlayer) {
-
+		
 	}
 
 	@Override

@@ -6,10 +6,11 @@ plugins {
 }
 
 dependencies {
-    "implementation"(project(":essentials-configuration"))
-    "implementation"(project(":essentials-common-api"))
-    "implementation"(project(":essentials-command"))
-    "implementation"(project(":essentials-common"))
+    rootProject.subprojects.forEach { subproject ->
+        if (subproject.name != "essentials-bootstrap" && subproject.name != "essentials-feature") {
+            "implementation"(project(subproject.path))
+        }
+    }
 }
 
 tasks.withType<ShadowJar> {

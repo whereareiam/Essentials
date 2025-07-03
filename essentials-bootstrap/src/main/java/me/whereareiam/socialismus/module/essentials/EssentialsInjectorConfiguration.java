@@ -2,15 +2,17 @@ package me.whereareiam.socialismus.module.essentials;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
+import com.google.inject.multibindings.Multibinder;
 import lombok.RequiredArgsConstructor;
 import me.whereareiam.socialismus.api.Reloadable;
-import me.whereareiam.socialismus.api.input.container.PlayerContainerService;
 import me.whereareiam.socialismus.api.input.registry.Registry;
 import me.whereareiam.socialismus.api.model.CommandEntity;
 import me.whereareiam.socialismus.api.output.PlatformInteractor;
 import me.whereareiam.socialismus.api.output.command.CommandService;
 import me.whereareiam.socialismus.api.output.config.ConfigurationLoader;
 import me.whereareiam.socialismus.api.output.config.ConfigurationManager;
+import me.whereareiam.socialismus.module.essentials.api.output.FeatureInitializer;
+import me.whereareiam.socialismus.module.essentials.feature.privatemessage.PrivateMessage;
 
 import java.util.Map;
 
@@ -25,7 +27,6 @@ public class EssentialsInjectorConfiguration extends AbstractModule {
 	private final ConfigurationLoader configurationLoader;
 
 	private final CommandService commandService;
-	private final PlayerContainerService playerContainerService;
 
 	@Override
 	protected void configure() {
@@ -38,5 +39,9 @@ public class EssentialsInjectorConfiguration extends AbstractModule {
 		bind(ConfigurationLoader.class).toInstance(configurationLoader);
 
 		bind(CommandService.class).toInstance(commandService);
+
+		Multibinder.newSetBinder(binder(), new TypeLiteral<FeatureInitializer<?>>() {});
+		Multibinder<FeatureInitializer<?>> featureInitializerBinder = Multibinder.newSetBinder(binder(), new TypeLiteral<>() {});
+		featureInitializerBinder.addBinding().to(PrivateMessage.class);
 	}
 }

@@ -5,7 +5,6 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import lombok.RequiredArgsConstructor;
 import me.whereareiam.socialismus.api.Reloadable;
-import me.whereareiam.socialismus.api.input.container.PlayerContainerService;
 import me.whereareiam.socialismus.api.input.registry.Registry;
 import me.whereareiam.socialismus.api.model.CommandEntity;
 import me.whereareiam.socialismus.api.output.PlatformInteractor;
@@ -14,6 +13,7 @@ import me.whereareiam.socialismus.api.output.command.CommandService;
 import me.whereareiam.socialismus.api.output.config.ConfigurationLoader;
 import me.whereareiam.socialismus.api.output.config.ConfigurationManager;
 import me.whereareiam.socialismus.api.output.module.SocialisticModule;
+import me.whereareiam.socialismus.module.essentials.api.input.FeatureManager;
 import me.whereareiam.socialismus.module.essentials.command.CommandRegistrar;
 import me.whereareiam.socialismus.module.essentials.configuration.ConfigBinder;
 
@@ -36,14 +36,15 @@ public class Essentials extends SocialisticModule {
 								commandRegistry,
 								parentInjector.getInstance(ConfigurationManager.class),
 								parentInjector.getInstance(ConfigurationLoader.class),
-								parentInjector.getInstance(CommandService.class),
-								parentInjector.getInstance(PlayerContainerService.class)),
+								parentInjector.getInstance(CommandService.class)),
+						new CommonConfiguration(),
 						new ConfigBinder(workingPath));
 	}
 
 	@Override
 	public void onEnable() {
 		injector.getInstance(CommandRegistrar.class).registerCommands();
+		injector.getInstance(FeatureManager.class).initializeFeatures();
 	}
 
 	@Override
