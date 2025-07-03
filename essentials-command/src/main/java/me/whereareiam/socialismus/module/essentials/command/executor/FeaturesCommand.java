@@ -8,7 +8,6 @@ import me.whereareiam.socialismus.api.model.player.DummyPlayer;
 import me.whereareiam.socialismus.api.output.command.CommandBase;
 import me.whereareiam.socialismus.api.output.command.CommandCooldown;
 import me.whereareiam.socialismus.module.essentials.api.model.config.EssentialsCommands;
-import org.incendo.cloud.annotations.Argument;
 import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.CommandDescription;
 import org.incendo.cloud.annotations.Permission;
@@ -33,7 +32,7 @@ public class FeaturesCommand extends CommandBase {
 	@CommandDescription("%description." + COMMAND_NAME)
 	@CommandCooldown("%cooldown." + COMMAND_NAME)
 	@Permission("%permission." + COMMAND_NAME)
-	public void onCommand(DummyPlayer dummyPlayer, @Argument(value = "message") String message) {
+	public void onCommand(DummyPlayer dummyPlayer) {
 
 	}
 

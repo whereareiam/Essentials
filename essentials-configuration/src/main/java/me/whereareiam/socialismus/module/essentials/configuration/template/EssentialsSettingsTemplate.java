@@ -11,6 +11,10 @@ public class EssentialsSettingsTemplate implements DefaultConfig<EssentialsSetti
 		EssentialsSettings config = new EssentialsSettings();
 
 		// Default values
+		EssentialsSettings.Announce announce = new EssentialsSettings.Announce();
+		announce.setFeatureInitialization(true);
+
+		config.setAnnounce(announce);
 
 		return config;
 	}

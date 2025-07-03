@@ -1,5 +1,6 @@
 package me.whereareiam.socialismus.module.essentials.command;
 
+import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -14,7 +15,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 @Singleton
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor_ = {@Inject})
 public class CommandRegistrar {
 	private final Injector injector;
 	private final CommandService commandService;

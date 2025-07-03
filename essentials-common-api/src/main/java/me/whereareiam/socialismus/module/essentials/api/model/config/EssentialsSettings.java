@@ -8,5 +8,12 @@ import lombok.ToString;
 @Setter
 @ToString
 public class EssentialsSettings {
+	private Announce announce;
 
+	@Getter
+	@Setter
+	@ToString
+	public static class Announce {
+		private boolean featureInitialization;
+	}
 }
