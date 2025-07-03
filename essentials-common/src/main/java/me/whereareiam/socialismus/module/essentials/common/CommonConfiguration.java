@@ -1,7 +1,8 @@
-package me.whereareiam.socialismus.module.essentials;
+package me.whereareiam.socialismus.module.essentials.common;
 
 import com.google.inject.AbstractModule;
 import me.whereareiam.socialismus.module.essentials.api.input.FeatureManager;
+import me.whereareiam.socialismus.module.essentials.common.feature.DefaultFeatureManager;
 
 public class CommonConfiguration extends AbstractModule {
 	@Override

@@ -16,7 +16,6 @@ public class CommandFeature extends Feature {
 
 	public static CommandFeature from(Feature feature) {
 		return CommandFeature.builder()
-				.id(feature.getId())
 				.enabled(feature.isEnabled())
 				.build();
 	}

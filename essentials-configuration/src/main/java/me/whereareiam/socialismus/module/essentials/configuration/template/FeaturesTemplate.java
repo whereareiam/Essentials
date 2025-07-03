@@ -3,9 +3,9 @@ package me.whereareiam.socialismus.module.essentials.configuration.template;
 import com.google.inject.Singleton;
 import me.whereareiam.socialismus.api.output.DefaultConfig;
 import me.whereareiam.socialismus.module.essentials.api.model.config.FeaturesConfig;
-import me.whereareiam.socialismus.module.essentials.api.model.feature.Feature;
+import me.whereareiam.socialismus.module.essentials.api.model.feature.CommandFeature;
 
-import java.util.List;
+import java.util.Map;
 
 @Singleton
 public class FeaturesTemplate implements DefaultConfig<FeaturesConfig> {
@@ -14,13 +14,13 @@ public class FeaturesTemplate implements DefaultConfig<FeaturesConfig> {
 		FeaturesConfig config = new FeaturesConfig();
 
 		// Default values
-		Feature pm = Feature.builder()
-				.id("privateMessages")
+		CommandFeature pm = CommandFeature.builder()
 				.enabled(true)
+				.registerCommands(true)
 				.build();
 
-		config.setFeatures(List.of(
-				pm
+		config.setFeatures(Map.of(
+				"privateMessage", pm
 		));
 
 		return config;

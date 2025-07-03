@@ -10,6 +10,5 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 public class Feature {
-	private String id;
 	private boolean enabled;
 }

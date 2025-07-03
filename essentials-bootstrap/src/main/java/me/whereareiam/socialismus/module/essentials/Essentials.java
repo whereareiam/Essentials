@@ -15,6 +15,7 @@ import me.whereareiam.socialismus.api.output.config.ConfigurationManager;
 import me.whereareiam.socialismus.api.output.module.SocialisticModule;
 import me.whereareiam.socialismus.module.essentials.api.input.FeatureManager;
 import me.whereareiam.socialismus.module.essentials.command.CommandRegistrar;
+import me.whereareiam.socialismus.module.essentials.common.CommonConfiguration;
 import me.whereareiam.socialismus.module.essentials.configuration.ConfigBinder;
 
 import java.util.Map;

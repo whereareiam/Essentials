@@ -4,10 +4,10 @@ import lombok.Getter;
 import lombok.Setter;
 import me.whereareiam.socialismus.module.essentials.api.model.feature.Feature;
 
-import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
 public class FeaturesConfig {
-	private List<? extends Feature> features;
+	private Map<String, ? extends Feature> features;
 }

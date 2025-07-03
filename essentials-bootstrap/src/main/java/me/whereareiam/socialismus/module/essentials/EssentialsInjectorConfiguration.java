@@ -11,6 +11,7 @@ import me.whereareiam.socialismus.api.output.PlatformInteractor;
 import me.whereareiam.socialismus.api.output.command.CommandService;
 import me.whereareiam.socialismus.api.output.config.ConfigurationLoader;
 import me.whereareiam.socialismus.api.output.config.ConfigurationManager;
+import me.whereareiam.socialismus.module.essentials.api.model.feature.Feature;
 import me.whereareiam.socialismus.module.essentials.api.output.FeatureInitializer;
 import me.whereareiam.socialismus.module.essentials.feature.privatemessage.PrivateMessage;
 
@@ -40,8 +41,15 @@ public class EssentialsInjectorConfiguration extends AbstractModule {
 
 		bind(CommandService.class).toInstance(commandService);
 
-		Multibinder.newSetBinder(binder(), new TypeLiteral<FeatureInitializer<?>>() {});
-		Multibinder<FeatureInitializer<?>> featureInitializerBinder = Multibinder.newSetBinder(binder(), new TypeLiteral<>() {});
-		featureInitializerBinder.addBinding().to(PrivateMessage.class);
+		Multibinder<FeatureInitializer<? extends Feature>> featureInitBinder =
+				Multibinder.newSetBinder(
+						binder(),
+						new TypeLiteral<>() {}
+				);
+		addFeatures(featureInitBinder);
+	}
+
+	private void addFeatures(Multibinder<FeatureInitializer<? extends Feature>> featureInitBinder) {
+		featureInitBinder.addBinding().to(PrivateMessage.class);
 	}
 }
