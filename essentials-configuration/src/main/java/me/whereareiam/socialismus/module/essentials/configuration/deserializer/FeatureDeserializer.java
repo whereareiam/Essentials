@@ -29,6 +29,8 @@ public class FeatureDeserializer extends JsonDeserializer<Feature> {
 		if (root.has("registerCommands"))
 			return codec.treeToValue(root, CommandFeature.class);
 
-		return codec.treeToValue(root, Feature.class);
+		return Feature.builder()
+				.enabled(root.get("enabled").asBoolean())
+				.build();
 	}
 }

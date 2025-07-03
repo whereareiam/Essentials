@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import lombok.RequiredArgsConstructor;
 import me.whereareiam.socialismus.api.Reloadable;
+import me.whereareiam.socialismus.api.input.registry.ObjectMapperRegistry;
 import me.whereareiam.socialismus.api.input.registry.Registry;
 import me.whereareiam.socialismus.api.model.CommandEntity;
 import me.whereareiam.socialismus.api.output.PlatformInteractor;
@@ -32,6 +33,7 @@ public class Essentials extends SocialisticModule {
 		injector =
 				Guice.createInjector(
 						new EssentialsInjectorConfiguration(
+								parentInjector.getInstance(ObjectMapperRegistry.class),
 								parentInjector.getInstance(PlatformInteractor.class),
 								reloadableRegistry,
 								commandRegistry,

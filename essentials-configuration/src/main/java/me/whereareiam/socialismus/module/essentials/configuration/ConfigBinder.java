@@ -7,6 +7,7 @@ import me.whereareiam.socialismus.module.essentials.api.model.config.EssentialsC
 import me.whereareiam.socialismus.module.essentials.api.model.config.EssentialsMessages;
 import me.whereareiam.socialismus.module.essentials.api.model.config.EssentialsSettings;
 import me.whereareiam.socialismus.module.essentials.api.model.config.FeaturesConfig;
+import me.whereareiam.socialismus.module.essentials.configuration.deserializer.FeatureDeserializer;
 import me.whereareiam.socialismus.module.essentials.configuration.provider.EssentialsCommandsProvider;
 import me.whereareiam.socialismus.module.essentials.configuration.provider.EssentialsMessagesProvider;
 import me.whereareiam.socialismus.module.essentials.configuration.provider.EssentialsSettingsProvider;
@@ -26,6 +27,10 @@ public class ConfigBinder extends AbstractModule {
 		bind(Path.class).annotatedWith(Names.named("featuresPath")).toInstance(workingPath.resolve("features"));
 		createDirectories();
 
+		// deserializers
+		bind(FeatureDeserializer.class).asEagerSingleton();
+
+		// configurations
 		bind(EssentialsSettingsProvider.class).asEagerSingleton();
 		bind(EssentialsSettings.class).toProvider(EssentialsSettingsProvider.class);
 
