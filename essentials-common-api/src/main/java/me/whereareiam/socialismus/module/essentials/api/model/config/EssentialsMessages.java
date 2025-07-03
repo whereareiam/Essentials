@@ -10,4 +10,19 @@ import lombok.ToString;
 @ToString
 @Singleton
 public class EssentialsMessages {
+	private Features features;
+
+	@Getter
+	@Setter
+	@ToString
+	public static class Features {
+		private PrivateMessage privateMessage;
+
+		@Getter
+		@Setter
+		@ToString
+		public static class PrivateMessage {
+			private String noRecipient;
+		}
+	}
 }

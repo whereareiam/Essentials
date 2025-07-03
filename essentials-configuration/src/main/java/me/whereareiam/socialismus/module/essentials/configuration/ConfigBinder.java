@@ -6,9 +6,11 @@ import lombok.RequiredArgsConstructor;
 import me.whereareiam.socialismus.module.essentials.api.model.config.EssentialsCommands;
 import me.whereareiam.socialismus.module.essentials.api.model.config.EssentialsMessages;
 import me.whereareiam.socialismus.module.essentials.api.model.config.EssentialsSettings;
+import me.whereareiam.socialismus.module.essentials.api.model.config.FeaturesConfig;
 import me.whereareiam.socialismus.module.essentials.configuration.provider.EssentialsCommandsProvider;
 import me.whereareiam.socialismus.module.essentials.configuration.provider.EssentialsMessagesProvider;
 import me.whereareiam.socialismus.module.essentials.configuration.provider.EssentialsSettingsProvider;
+import me.whereareiam.socialismus.module.essentials.configuration.provider.FeaturesProvider;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -32,6 +34,9 @@ public class ConfigBinder extends AbstractModule {
 
 		bind(EssentialsCommandsProvider.class).asEagerSingleton();
 		bind(EssentialsCommands.class).toProvider(EssentialsCommandsProvider.class);
+
+		bind(FeaturesProvider.class).asEagerSingleton();
+		bind(FeaturesConfig.class).toProvider(FeaturesProvider.class);
 	}
 
 	private void createDirectories() {
