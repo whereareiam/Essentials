@@ -10,12 +10,11 @@ import java.util.Map;
 public class PrivateMessage implements CommandFeatureInitializer {
 	@Override
 	public String getId() {
-		return "privateMessages";
+		return "privateMessage";
 	}
 
 	@Override
 	public void initialize(CommandFeature feature) {
-
 	}
 
 	@Override

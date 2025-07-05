@@ -17,8 +17,7 @@ import me.whereareiam.socialismus.module.essentials.api.model.feature.Feature;
 import me.whereareiam.socialismus.module.essentials.api.output.CommandFeatureInitializer;
 import me.whereareiam.socialismus.module.essentials.api.output.FeatureInitializer;
 
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -33,7 +32,7 @@ public class DefaultFeatureManager implements FeatureManager {
 	private final Set<FeatureInitializer<? extends Feature>> inits;
 	private final Registry<Map<String, CommandEntity>> commandRegistry;
 
-	private final Set<Feature> activeFeatures = new HashSet<>();
+	private final Map<String, Feature> activeFeatures = new HashMap<>();
 
 	@Override
 	public void initializeFeatures() {
@@ -52,12 +51,12 @@ public class DefaultFeatureManager implements FeatureManager {
 			if (feat instanceof CommandFeature cf && cf.isRegisterCommands())
 				registerCommandsFor(init, announce);
 
-			activeFeatures.add(feat);
+			activeFeatures.put(id, feat);
 		}
 	}
 
 	@Override
-	public Collection<Feature> getActiveFeatures() {
+	public Map<String, Feature> getActiveFeatures() {
 		return activeFeatures;
 	}
 
@@ -73,10 +72,17 @@ public class DefaultFeatureManager implements FeatureManager {
 		if (!(init instanceof CommandFeatureInitializer cfi))
 			return;
 
-		commandRegistry.register(cfi.getCommands());
+		Map<String, CommandEntity> commands = cfi.getCommands();
+		if (commands == null || commands.isEmpty())
+			return;
+
+		commandRegistry.register(commands);
 
 		Map<String, Class<? extends CommandBase>> executors = cfi.getExecutors();
-		for (Map.Entry<String, CommandEntity> entry : cfi.getCommands().entrySet()) {
+		if (executors == null || executors.isEmpty())
+			return;
+
+		for (Map.Entry<String, CommandEntity> entry : commands.entrySet()) {
 			String commandKey = entry.getKey();
 
 			if (executors.containsKey(commandKey)) {
@@ -87,7 +93,6 @@ public class DefaultFeatureManager implements FeatureManager {
 		}
 		commandService.registerCommands();
 
-		if (announce)
-			Logger.info("Registered commands for feature: {}", init.getId());
+		if (announce) Logger.info("Registered commands for feature: {}", init.getId());
 	}
 }

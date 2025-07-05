@@ -1,11 +1,12 @@
 package me.whereareiam.socialismus.module.essentials.api.input;
 
+
 import me.whereareiam.socialismus.module.essentials.api.model.feature.Feature;
 
-import java.util.Collection;
+import java.util.Map;
 
 public interface FeatureManager {
 	void initializeFeatures();
 
-	Collection<Feature> getActiveFeatures();
+	Map<String, Feature> getActiveFeatures();
 }
