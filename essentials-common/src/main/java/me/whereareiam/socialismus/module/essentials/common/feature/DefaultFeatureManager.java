@@ -17,6 +17,8 @@ import me.whereareiam.socialismus.module.essentials.api.model.feature.Feature;
 import me.whereareiam.socialismus.module.essentials.api.output.CommandFeatureInitializer;
 import me.whereareiam.socialismus.module.essentials.api.output.FeatureInitializer;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -30,6 +32,8 @@ public class DefaultFeatureManager implements FeatureManager {
 
 	private final Set<FeatureInitializer<? extends Feature>> inits;
 	private final Registry<Map<String, CommandEntity>> commandRegistry;
+
+	private final Set<Feature> activeFeatures = new HashSet<>();
 
 	@Override
 	public void initializeFeatures() {
@@ -47,7 +51,14 @@ public class DefaultFeatureManager implements FeatureManager {
 
 			if (feat instanceof CommandFeature cf && cf.isRegisterCommands())
 				registerCommandsFor(init, announce);
+
+			activeFeatures.add(feat);
 		}
+	}
+
+	@Override
+	public Collection<Feature> getActiveFeatures() {
+		return activeFeatures;
 	}
 
 	@SuppressWarnings("unchecked")
