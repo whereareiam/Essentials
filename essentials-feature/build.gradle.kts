@@ -4,3 +4,9 @@ subprojects {
         "compileOnly"(rootProject.libs.bundles.cloud)
     }
 }
+
+dependencies {
+    subprojects.forEach {
+        "implementation"(it)
+    }
+}

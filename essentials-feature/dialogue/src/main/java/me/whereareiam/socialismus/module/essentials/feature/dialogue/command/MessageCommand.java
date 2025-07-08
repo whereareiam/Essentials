@@ -9,6 +9,7 @@ import me.whereareiam.socialismus.api.output.command.CommandBase;
 import me.whereareiam.socialismus.api.output.command.CommandCooldown;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.config.DialogueCommands;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.config.DialogueMessages;
+import org.incendo.cloud.annotations.Argument;
 import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.CommandDescription;
 import org.incendo.cloud.annotations.Permission;
@@ -36,7 +37,11 @@ public class MessageCommand extends CommandBase {
 	@CommandDescription("%description." + COMMAND_NAME)
 	@CommandCooldown("%cooldown." + COMMAND_NAME)
 	@Permission("%permission." + COMMAND_NAME)
-	public void onCommand(DummyPlayer dummyPlayer, String recipientName, String message) {
+	public void onCommand(
+			DummyPlayer dummyPlayer,
+			@Argument(value = "recipient", suggestions = "crossPlayers") String recipientName,
+			@Argument(value = "message") String message
+	) {
 	}
 
 	@Override

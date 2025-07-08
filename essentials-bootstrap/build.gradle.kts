@@ -7,7 +7,7 @@ plugins {
 
 dependencies {
     rootProject.subprojects.forEach { subproject ->
-        if (subproject.name != "essentials-bootstrap" && subproject.name != "essentials-feature") {
+        if (subproject.name != "essentials-bootstrap" && subproject.parent?.name != "essentials-feature") {
             "implementation"(project(subproject.path))
         }
     }

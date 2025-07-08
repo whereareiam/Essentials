@@ -18,6 +18,7 @@ import me.whereareiam.socialismus.module.essentials.api.input.FeatureManager;
 import me.whereareiam.socialismus.module.essentials.command.CommandRegistrar;
 import me.whereareiam.socialismus.module.essentials.common.CommonConfiguration;
 import me.whereareiam.socialismus.module.essentials.configuration.ConfigBinder;
+import me.whereareiam.socialismus.module.essentials.feature.FeatureConfiguration;
 
 import java.util.Map;
 
@@ -41,7 +42,8 @@ public class Essentials extends SocialisticModule {
 								parentInjector.getInstance(ConfigurationLoader.class),
 								parentInjector.getInstance(CommandService.class)),
 						new CommonConfiguration(),
-						new ConfigBinder(workingPath));
+						new ConfigBinder(workingPath),
+						new FeatureConfiguration());
 	}
 
 	@Override

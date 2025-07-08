@@ -1,0 +1,57 @@
+package me.whereareiam.socialismus.module.essentials.feature.dialogue.provider;
+
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.google.inject.Singleton;
+import com.google.inject.name.Named;
+import me.whereareiam.socialismus.api.Reloadable;
+import me.whereareiam.socialismus.api.input.registry.Registry;
+import me.whereareiam.socialismus.api.output.config.ConfigurationLoader;
+import me.whereareiam.socialismus.api.output.config.ConfigurationManager;
+import me.whereareiam.socialismus.module.essentials.feature.dialogue.config.DialogueCommands;
+import me.whereareiam.socialismus.module.essentials.feature.dialogue.template.DialogueCommandsTemplate;
+
+import java.nio.file.Path;
+
+@Singleton
+public class DialogueCommandsProvider implements Provider<DialogueCommands>, Reloadable {
+	private final Path featurePath;
+	private final ConfigurationLoader configLoader;
+
+	private DialogueCommands commands;
+
+	@Inject
+	public DialogueCommandsProvider(
+			@Named("featurePath") Path featurePath,
+			ConfigurationLoader configLoader,
+			ConfigurationManager configManager,
+			DialogueCommandsTemplate template,
+			Registry<Reloadable> reloadableRegistry
+	) {
+		this.featurePath = featurePath;
+		this.configLoader = configLoader;
+
+		configManager.addTemplate(DialogueCommands.class, template);
+
+		reloadableRegistry.register(this);
+		get();
+	}
+
+	@Override
+	public DialogueCommands get() {
+		if (commands != null) return commands;
+
+		load();
+
+		return commands;
+	}
+
+	@Override
+	public void reload() {
+		load();
+	}
+
+	private void load() {
+		commands = configLoader.load(featurePath.resolve("commands"), DialogueCommands.class);
+	}
+}

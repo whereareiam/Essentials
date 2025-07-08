@@ -17,10 +17,10 @@ public class DialogueCommandsTemplate implements DefaultConfig<DialogueCommands>
 		// Default values
 		CommandEntity msg = CommandEntity.builder()
 				.enabled(true)
-				.aliases(List.of("w", "whisper", "tell", "msg", "message"))
+				.aliases(List.of("message", "w", "whisper", "tell", "msg"))
 				.permission("")
 				.description("Send a private message to another player.")
-				.usage("{alias} <player> <message>")
+				.usage("{alias} <recipient> <message>")
 				.cooldown(CommandEntity.Cooldown.builder()
 						.enabled(true)
 						.duration(2)
@@ -30,9 +30,9 @@ public class DialogueCommandsTemplate implements DefaultConfig<DialogueCommands>
 
 		CommandEntity reply = CommandEntity.builder()
 				.enabled(true)
-				.aliases(List.of("r", "reply"))
+				.aliases(List.of("reply", "r"))
 				.permission("")
-				.description("Reply to the last private message received.")
+				.description("Reply to the last private message you received.")
 				.usage("{alias} <message>")
 				.cooldown(CommandEntity.Cooldown.builder()
 						.enabled(true)
@@ -42,7 +42,7 @@ public class DialogueCommandsTemplate implements DefaultConfig<DialogueCommands>
 				).build();
 
 		config.setCommands(Map.of(
-				"msg", msg,
+				"message", msg,
 				"reply", reply
 		));
 

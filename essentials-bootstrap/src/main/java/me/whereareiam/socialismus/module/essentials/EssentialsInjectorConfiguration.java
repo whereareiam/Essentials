@@ -2,7 +2,6 @@ package me.whereareiam.socialismus.module.essentials;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
-import com.google.inject.multibindings.Multibinder;
 import lombok.RequiredArgsConstructor;
 import me.whereareiam.socialismus.api.Reloadable;
 import me.whereareiam.socialismus.api.input.registry.ObjectMapperRegistry;
@@ -12,9 +11,6 @@ import me.whereareiam.socialismus.api.output.PlatformInteractor;
 import me.whereareiam.socialismus.api.output.command.CommandService;
 import me.whereareiam.socialismus.api.output.config.ConfigurationLoader;
 import me.whereareiam.socialismus.api.output.config.ConfigurationManager;
-import me.whereareiam.socialismus.module.essentials.api.model.feature.Feature;
-import me.whereareiam.socialismus.module.essentials.api.output.FeatureInitializer;
-import me.whereareiam.socialismus.module.essentials.feature.dialogue.Dialogue;
 
 import java.util.Map;
 
@@ -43,16 +39,5 @@ public class EssentialsInjectorConfiguration extends AbstractModule {
 		bind(ConfigurationLoader.class).toInstance(configurationLoader);
 
 		bind(CommandService.class).toInstance(commandService);
-
-		Multibinder<FeatureInitializer<? extends Feature>> featureInitBinder =
-				Multibinder.newSetBinder(
-						binder(),
-						new TypeLiteral<>() {}
-				);
-		addFeatures(featureInitBinder);
-	}
-
-	private void addFeatures(Multibinder<FeatureInitializer<? extends Feature>> featureInitBinder) {
-		featureInitBinder.addBinding().to(Dialogue.class);
 	}
 }
