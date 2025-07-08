@@ -2,40 +2,15 @@ package me.whereareiam.socialismus.module.essentials.feature.dialogue.template;
 
 import com.google.inject.Singleton;
 import me.whereareiam.socialismus.api.output.DefaultConfig;
-import me.whereareiam.socialismus.module.essentials.api.model.config.EssentialsMessages;
-
-import java.util.List;
+import me.whereareiam.socialismus.module.essentials.feature.dialogue.config.DialogueMessages;
 
 @Singleton
-public class DialogueMessagesTemplate implements DefaultConfig<EssentialsMessages> {
+public class DialogueMessagesTemplate implements DefaultConfig<DialogueMessages> {
 	@Override
-	public EssentialsMessages getDefault() {
-		EssentialsMessages config = new EssentialsMessages();
+	public DialogueMessages getDefault() {
+		DialogueMessages config = new DialogueMessages();
 
 		// Default values
-		EssentialsMessages.Commands commands = new EssentialsMessages.Commands();
-
-		EssentialsMessages.Commands.FeaturesCommand featuresCommand = new EssentialsMessages.Commands.FeaturesCommand();
-		featuresCommand.setFormat(List.of(
-				" ",
-				"<gold><bold> Socialismus</bold> <white>Features",
-				" ",
-				"{features}",
-				" "
-		));
-		featuresCommand.setFeatureFormat(" <dark_gray>- <green>{feature}");
-		featuresCommand.setNoFeatures(" <red>No features available.");
-		commands.setFeaturesCommand(featuresCommand);
-
-		config.setCommands(commands);
-
-		EssentialsMessages.Features features = new EssentialsMessages.Features();
-
-		EssentialsMessages.Features.Dialogue dialogue = new EssentialsMessages.Features.Dialogue();
-		dialogue.setNoRecipient("{prefix}<white>You must specify a recipient to send a private message to.");
-		features.setDialogue(dialogue);
-
-		config.setFeatures(features);
 
 		return config;
 	}

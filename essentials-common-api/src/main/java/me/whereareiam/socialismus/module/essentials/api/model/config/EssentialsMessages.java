@@ -13,7 +13,6 @@ import java.util.List;
 @Singleton
 public class EssentialsMessages {
 	private Commands commands;
-	private Features features;
 
 	@Getter
 	@Setter
@@ -28,20 +27,6 @@ public class EssentialsMessages {
 			private List<String> format;
 			private String featureFormat;
 			private String noFeatures;
-		}
-	}
-
-	@Getter
-	@Setter
-	@ToString
-	public static class Features {
-		private Dialogue dialogue;
-
-		@Getter
-		@Setter
-		@ToString
-		public static class Dialogue {
-			private String noRecipient;
 		}
 	}
 }

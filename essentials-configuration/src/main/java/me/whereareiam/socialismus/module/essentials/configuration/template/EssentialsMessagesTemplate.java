@@ -29,14 +29,6 @@ public class EssentialsMessagesTemplate implements DefaultConfig<EssentialsMessa
 
 		config.setCommands(commands);
 
-		EssentialsMessages.Features features = new EssentialsMessages.Features();
-
-		EssentialsMessages.Features.Dialogue dialogue = new EssentialsMessages.Features.Dialogue();
-		dialogue.setNoRecipient("{prefix}<white>You must specify a recipient to send a private message to.");
-		features.setDialogue(dialogue);
-
-		config.setFeatures(features);
-
 		return config;
 	}
 }
