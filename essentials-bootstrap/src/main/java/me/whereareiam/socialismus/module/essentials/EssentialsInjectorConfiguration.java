@@ -14,7 +14,7 @@ import me.whereareiam.socialismus.api.output.config.ConfigurationLoader;
 import me.whereareiam.socialismus.api.output.config.ConfigurationManager;
 import me.whereareiam.socialismus.module.essentials.api.model.feature.Feature;
 import me.whereareiam.socialismus.module.essentials.api.output.FeatureInitializer;
-import me.whereareiam.socialismus.module.essentials.feature.privatemessage.PrivateMessage;
+import me.whereareiam.socialismus.module.essentials.feature.dialogue.Dialogue;
 
 import java.util.Map;
 
@@ -53,6 +53,6 @@ public class EssentialsInjectorConfiguration extends AbstractModule {
 	}
 
 	private void addFeatures(Multibinder<FeatureInitializer<? extends Feature>> featureInitBinder) {
-		featureInitBinder.addBinding().to(PrivateMessage.class);
+		featureInitBinder.addBinding().to(Dialogue.class);
 	}
 }

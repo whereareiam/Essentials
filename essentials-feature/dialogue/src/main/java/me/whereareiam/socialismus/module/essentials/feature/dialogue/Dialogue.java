@@ -1,4 +1,4 @@
-package me.whereareiam.socialismus.module.essentials.feature.privatemessage;
+package me.whereareiam.socialismus.module.essentials.feature.dialogue;
 
 import me.whereareiam.socialismus.api.model.CommandEntity;
 import me.whereareiam.socialismus.api.output.command.CommandBase;
@@ -7,10 +7,10 @@ import me.whereareiam.socialismus.module.essentials.api.output.CommandFeatureIni
 
 import java.util.Map;
 
-public class PrivateMessage implements CommandFeatureInitializer {
+public class Dialogue implements CommandFeatureInitializer {
 	@Override
 	public String getId() {
-		return "privateMessage";
+		return "dialogue";
 	}
 
 	@Override

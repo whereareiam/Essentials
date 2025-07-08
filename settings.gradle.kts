@@ -1,7 +1,7 @@
 rootProject.name = "Essentials"
 
 include("essentials-feature")
-include("essentials-feature:private-message")
+include("essentials-feature:dialogue")
 
 include("essentials-configuration")
 include("essentials-common-api")

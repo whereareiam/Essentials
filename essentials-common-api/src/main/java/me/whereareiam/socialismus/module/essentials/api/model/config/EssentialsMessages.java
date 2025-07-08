@@ -35,12 +35,12 @@ public class EssentialsMessages {
 	@Setter
 	@ToString
 	public static class Features {
-		private PrivateMessage privateMessage;
+		private Dialogue dialogue;
 
 		@Getter
 		@Setter
 		@ToString
-		public static class PrivateMessage {
+		public static class Dialogue {
 			private String noRecipient;
 		}
 	}

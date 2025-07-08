@@ -1,4 +1,4 @@
-package me.whereareiam.socialismus.module.essentials.configuration.template;
+package me.whereareiam.socialismus.module.essentials.feature.dialogue.template;
 
 import com.google.inject.Singleton;
 import me.whereareiam.socialismus.api.output.DefaultConfig;
@@ -7,7 +7,7 @@ import me.whereareiam.socialismus.module.essentials.api.model.config.EssentialsM
 import java.util.List;
 
 @Singleton
-public class EssentialsMessagesTemplate implements DefaultConfig<EssentialsMessages> {
+public class DialogueMessagesTemplate implements DefaultConfig<EssentialsMessages> {
 	@Override
 	public EssentialsMessages getDefault() {
 		EssentialsMessages config = new EssentialsMessages();

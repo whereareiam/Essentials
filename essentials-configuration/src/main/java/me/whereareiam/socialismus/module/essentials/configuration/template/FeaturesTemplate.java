@@ -20,7 +20,7 @@ public class FeaturesTemplate implements DefaultConfig<FeaturesConfig> {
 				.build();
 
 		config.setFeatures(Map.of(
-				"privateMessage", pm
+				"dialogue", pm
 		));
 
 		return config;
