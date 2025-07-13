@@ -14,6 +14,7 @@ public class DialogueMessagesTemplate implements DefaultConfig<DialogueMessages>
 		DialogueMessages.Commands commands = new DialogueMessages.Commands();
 		DialogueMessages.Commands.Message message = new DialogueMessages.Commands.Message();
 		message.setNoRecipient("{prefix}<white>Recipient not found");
+		message.setSamePlayer("{prefix}<white>You cannot send a message to yourself");
 		message.setSenderFormat("<gold><bold>PM</bold> <dark_gray>| <gray>{senderName} <dark_gray>-> <gray>{recipientName}: <white>{message}");
 		message.setRecipientFormat("<gold><bold>PM</bold> <dark_gray>| <gray>{senderName} <dark_gray>-> <gray>{recipientName}: <white>{message}");
 		commands.setMessage(message);

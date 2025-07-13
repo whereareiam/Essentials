@@ -23,6 +23,7 @@ public class DialogueMessages {
 		@ToString
 		public static class Message {
 			private String noRecipient;
+			private String samePlayer;
 			private String senderFormat;
 			private String recipientFormat;
 		}
