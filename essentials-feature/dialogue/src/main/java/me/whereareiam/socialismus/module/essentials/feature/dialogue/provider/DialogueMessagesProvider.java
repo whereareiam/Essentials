@@ -8,43 +8,42 @@ import me.whereareiam.socialismus.api.Reloadable;
 import me.whereareiam.socialismus.api.input.registry.Registry;
 import me.whereareiam.socialismus.api.output.config.ConfigurationLoader;
 import me.whereareiam.socialismus.api.output.config.ConfigurationManager;
-import me.whereareiam.socialismus.module.essentials.feature.dialogue.config.DialogueCommands;
-import me.whereareiam.socialismus.module.essentials.feature.dialogue.template.DialogueCommandsTemplate;
+import me.whereareiam.socialismus.module.essentials.feature.dialogue.config.DialogueMessages;
+import me.whereareiam.socialismus.module.essentials.feature.dialogue.template.DialogueMessagesTemplate;
 
 import java.nio.file.Path;
 
 @Singleton
-public class DialogueCommandsProvider implements Provider<DialogueCommands>, Reloadable {
+public class DialogueMessagesProvider implements Provider<DialogueMessages>, Reloadable {
 	private final Path featurePath;
 	private final ConfigurationLoader configLoader;
 
-	private DialogueCommands commands;
+	private DialogueMessages messages;
 
 	@Inject
-	public DialogueCommandsProvider(
+	public DialogueMessagesProvider(
 			@Named("featurePath") Path featurePath,
 			ConfigurationLoader configLoader,
 			ConfigurationManager configManager,
-			DialogueCommandsTemplate template,
+			DialogueMessagesTemplate template,
 			Registry<Reloadable> reloadableRegistry
 	) {
-		System.out.println("Initializing DialogueCommandsProvider...");
 		this.featurePath = featurePath;
 		this.configLoader = configLoader;
 
-		configManager.addTemplate(DialogueCommands.class, template);
+		configManager.addTemplate(DialogueMessages.class, template);
 
 		reloadableRegistry.register(this);
 		get();
 	}
 
 	@Override
-	public DialogueCommands get() {
-		if (commands != null) return commands;
+	public DialogueMessages get() {
+		if (messages != null) return messages;
 
 		load();
 
-		return commands;
+		return messages;
 	}
 
 	@Override
@@ -53,6 +52,6 @@ public class DialogueCommandsProvider implements Provider<DialogueCommands>, Rel
 	}
 
 	private void load() {
-		commands = configLoader.load(featurePath.resolve("commands"), DialogueCommands.class);
+		messages = configLoader.load(featurePath.resolve("messages"), DialogueMessages.class);
 	}
 }

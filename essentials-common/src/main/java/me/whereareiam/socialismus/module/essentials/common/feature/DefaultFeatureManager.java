@@ -81,6 +81,7 @@ public class DefaultFeatureManager implements FeatureManager {
 				}
 
 				try {
+					System.out.println("Initializing feature: " + id);
 					Injector featureInjector = injector.createChildInjector(
 							moduleClass.getDeclaredConstructor().newInstance(),
 							new AbstractModule() {

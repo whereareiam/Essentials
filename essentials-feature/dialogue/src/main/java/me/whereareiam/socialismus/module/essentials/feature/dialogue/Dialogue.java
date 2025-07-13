@@ -11,12 +11,19 @@ import me.whereareiam.socialismus.module.essentials.api.output.CommandFeatureIni
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.command.MessageCommand;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.command.ReplyCommand;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.config.DialogueCommands;
+import me.whereareiam.socialismus.module.essentials.feature.dialogue.config.DialogueMessages;
+import me.whereareiam.socialismus.module.essentials.feature.dialogue.config.DialogueSettings;
+import me.whereareiam.socialismus.module.essentials.feature.dialogue.sync.DialogueNetworkBridge;
 
 import java.util.Map;
 
 @Singleton
 @RequiredArgsConstructor(onConstructor_ = {@Inject})
 public class Dialogue implements CommandFeatureInitializer {
+	private final DialogueNetworkBridge networkBridge;
+
+	private final Provider<DialogueSettings> settings;
+	private final Provider<DialogueMessages> messages;
 	private final Provider<DialogueCommands> commands;
 
 	@Override
@@ -26,6 +33,12 @@ public class Dialogue implements CommandFeatureInitializer {
 
 	@Override
 	public void initialize(CommandFeature feature) {
+		// initialize configurations before using them
+		settings.get();
+		messages.get();
+		commands.get();
+
+		networkBridge.initialize();
 	}
 
 	@Override

@@ -5,15 +5,18 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import lombok.RequiredArgsConstructor;
 import me.whereareiam.socialismus.api.Reloadable;
+import me.whereareiam.socialismus.api.input.container.PlayerContainerService;
 import me.whereareiam.socialismus.api.input.registry.ObjectMapperRegistry;
 import me.whereareiam.socialismus.api.input.registry.Registry;
 import me.whereareiam.socialismus.api.model.CommandEntity;
 import me.whereareiam.socialismus.api.output.PlatformInteractor;
 import me.whereareiam.socialismus.api.output.Scheduler;
+import me.whereareiam.socialismus.api.output.SerializationService;
 import me.whereareiam.socialismus.api.output.command.CommandService;
 import me.whereareiam.socialismus.api.output.config.ConfigurationLoader;
 import me.whereareiam.socialismus.api.output.config.ConfigurationManager;
 import me.whereareiam.socialismus.api.output.module.SocialisticModule;
+import me.whereareiam.socialismus.api.output.resource.sync.SyncService;
 import me.whereareiam.socialismus.module.essentials.api.input.FeatureManager;
 import me.whereareiam.socialismus.module.essentials.command.CommandRegistrar;
 import me.whereareiam.socialismus.module.essentials.common.CommonConfiguration;
@@ -36,6 +39,9 @@ public class Essentials extends SocialisticModule {
 						new EssentialsInjectorConfiguration(
 								parentInjector.getInstance(ObjectMapperRegistry.class),
 								parentInjector.getInstance(PlatformInteractor.class),
+								parentInjector.getInstance(PlayerContainerService.class),
+								parentInjector.getInstance(SerializationService.class),
+								parentInjector.getInstance(SyncService.class),
 								reloadableRegistry,
 								commandRegistry,
 								parentInjector.getInstance(ConfigurationManager.class),

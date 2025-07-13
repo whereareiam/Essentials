@@ -10,4 +10,21 @@ import lombok.ToString;
 @ToString
 @Singleton
 public class DialogueMessages {
+	private Commands commands;
+
+	@Getter
+	@Setter
+	@ToString
+	public static class Commands {
+		private Message message;
+
+		@Getter
+		@Setter
+		@ToString
+		public static class Message {
+			private String noRecipient;
+			private String senderFormat;
+			private String recipientFormat;
+		}
+	}
 }

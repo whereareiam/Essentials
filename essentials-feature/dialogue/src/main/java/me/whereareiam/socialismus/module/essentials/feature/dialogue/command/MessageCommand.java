@@ -8,7 +8,7 @@ import me.whereareiam.socialismus.api.model.player.DummyPlayer;
 import me.whereareiam.socialismus.api.output.command.CommandBase;
 import me.whereareiam.socialismus.api.output.command.CommandCooldown;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.config.DialogueCommands;
-import me.whereareiam.socialismus.module.essentials.feature.dialogue.config.DialogueMessages;
+import me.whereareiam.socialismus.module.essentials.feature.dialogue.service.DialogueManager;
 import org.incendo.cloud.annotations.Argument;
 import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.CommandDescription;
@@ -20,17 +20,17 @@ import java.util.Map;
 public class MessageCommand extends CommandBase {
 	private static final String COMMAND_NAME = "message";
 	private final Provider<DialogueCommands> commands;
-	private final Provider<DialogueMessages> messages;
+	private final DialogueManager dialogueManager;
 
 	@Inject
 	public MessageCommand(
 			Provider<DialogueCommands> commands,
-			Provider<DialogueMessages> messages
+			DialogueManager dialogueManager
 	) {
 		super(COMMAND_NAME);
 
 		this.commands = commands;
-		this.messages = messages;
+		this.dialogueManager = dialogueManager;
 	}
 
 	@Command("%command." + COMMAND_NAME)
@@ -42,6 +42,7 @@ public class MessageCommand extends CommandBase {
 			@Argument(value = "recipient", suggestions = "crossPlayers") String recipientName,
 			@Argument(value = "message") String message
 	) {
+		dialogueManager.send(dummyPlayer, recipientName, message);
 	}
 
 	@Override

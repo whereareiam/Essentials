@@ -11,6 +11,14 @@ public class DialogueMessagesTemplate implements DefaultConfig<DialogueMessages>
 		DialogueMessages config = new DialogueMessages();
 
 		// Default values
+		DialogueMessages.Commands commands = new DialogueMessages.Commands();
+		DialogueMessages.Commands.Message message = new DialogueMessages.Commands.Message();
+		message.setNoRecipient("{prefix}<white>Recipient not found");
+		message.setSenderFormat("<gold><bold>PM</bold> <dark_gray>| <gray>{senderName} <dark_gray>-> <gray>{recipientName}: <white>{message}");
+		message.setRecipientFormat("<gold><bold>PM</bold> <dark_gray>| <gray>{senderName} <dark_gray>-> <gray>{recipientName}: <white>{message}");
+		commands.setMessage(message);
+
+		config.setCommands(commands);
 
 		return config;
 	}
