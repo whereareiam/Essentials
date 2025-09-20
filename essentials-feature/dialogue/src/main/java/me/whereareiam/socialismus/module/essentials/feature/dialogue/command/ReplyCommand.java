@@ -8,7 +8,7 @@ import me.whereareiam.socialismus.api.model.player.DummyPlayer;
 import me.whereareiam.socialismus.api.output.command.CommandBase;
 import me.whereareiam.socialismus.api.output.command.CommandCooldown;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.config.DialogueCommands;
-import me.whereareiam.socialismus.module.essentials.feature.dialogue.config.DialogueMessages;
+import me.whereareiam.socialismus.module.essentials.feature.dialogue.service.dialogue.DialogueManager;
 import org.incendo.cloud.annotations.Argument;
 import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.CommandDescription;
@@ -20,17 +20,17 @@ import java.util.Map;
 public class ReplyCommand extends CommandBase {
 	private static final String COMMAND_NAME = "reply";
 	private final Provider<DialogueCommands> commands;
-	private final Provider<DialogueMessages> messages;
+	private final DialogueManager dialogueManager;
 
 	@Inject
 	public ReplyCommand(
 			Provider<DialogueCommands> commands,
-			Provider<DialogueMessages> messages
+			DialogueManager dialogueManager
 	) {
 		super(COMMAND_NAME);
 
 		this.commands = commands;
-		this.messages = messages;
+		this.dialogueManager = dialogueManager;
 	}
 
 	@Command("%command." + COMMAND_NAME)
@@ -41,6 +41,35 @@ public class ReplyCommand extends CommandBase {
 			DummyPlayer dummyPlayer,
 			@Argument(value = "message") String message
 	) {
+		dialogueManager.sendReply(dummyPlayer, message);
+	}
+
+	@Command("%command." + COMMAND_NAME + " list")
+	@CommandDescription("Show recent conversations")
+	@CommandCooldown("%cooldown." + COMMAND_NAME)
+	@Permission("%permission." + COMMAND_NAME)
+	public void onListCommand(DummyPlayer dummyPlayer) {
+		dialogueManager.showRecentConversations(dummyPlayer);
+	}
+
+	@Command("%command." + COMMAND_NAME + " clear")
+	@CommandDescription("Clear conversation history")
+	@CommandCooldown("%cooldown." + COMMAND_NAME)
+	@Permission("%permission." + COMMAND_NAME)
+	public void onClearCommand(DummyPlayer dummyPlayer) {
+		dialogueManager.clearConversationHistory(dummyPlayer);
+	}
+
+	@Command("%command." + COMMAND_NAME + " <player> <message>")
+	@CommandDescription("Reply to specific player")
+	@CommandCooldown("%cooldown." + COMMAND_NAME)
+	@Permission("%permission." + COMMAND_NAME)
+	public void onReplyToCommand(
+			DummyPlayer dummyPlayer,
+			@Argument(value = "player", suggestions = "replyTargets") String player,
+			@Argument(value = "message") String message
+	) {
+		dialogueManager.sendReplyTo(dummyPlayer, player, message);
 	}
 
 	@Override

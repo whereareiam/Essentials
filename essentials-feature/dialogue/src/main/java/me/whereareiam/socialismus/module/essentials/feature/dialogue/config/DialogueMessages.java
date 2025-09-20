@@ -17,6 +17,7 @@ public class DialogueMessages {
 	@ToString
 	public static class Commands {
 		private Message message;
+		private Reply reply;
 
 		@Getter
 		@Setter
@@ -26,6 +27,16 @@ public class DialogueMessages {
 			private String samePlayer;
 			private String senderFormat;
 			private String recipientFormat;
+		}
+
+		@Getter
+		@Setter
+		@ToString
+		public static class Reply {
+			private String noPreviousSender;
+			private String noConversations;
+			private String conversationListHeader;
+			private String conversationListEntry;
 		}
 	}
 }

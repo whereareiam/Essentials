@@ -1,4 +1,4 @@
-package me.whereareiam.socialismus.module.essentials.feature.dialogue.service;
+package me.whereareiam.socialismus.module.essentials.feature.dialogue.service.dialogue;
 
 import com.google.inject.Provider;
 import lombok.AllArgsConstructor;
@@ -14,11 +14,11 @@ import net.kyori.adventure.text.Component;
 import java.util.List;
 
 @AllArgsConstructor
-abstract class AbstractDialogueService {
+public abstract class AbstractDialogueService {
 	protected final PlayerContainerService players;
 	protected final Provider<DialogueMessages> messages;
 
-	protected List<SerializerPlaceholder> placeholders(Dialogue pm, DummyPlayer viewer) {
+	protected List<SerializerPlaceholder> placeholders(Dialogue pm) {
 		return List.of(
 				new SerializerPlaceholder("{senderName}", pm.getSender().getUsername()),
 				new SerializerPlaceholder("{recipientName}", pm.getRecipientName()),
@@ -26,9 +26,9 @@ abstract class AbstractDialogueService {
 		);
 	}
 
-	protected Component render(DummyPlayer viewer,
-	                           List<SerializerPlaceholder> ph,
-	                           String template) {
+	protected Component render(
+			DummyPlayer viewer, List<SerializerPlaceholder> ph, String template
+	) {
 		return Serializer.serialize(new SerializerContent(viewer, ph, template));
 	}
 

@@ -9,6 +9,10 @@ allprojects {
         sourceCompatibility = JavaVersion.VERSION_17.toString()
         targetCompatibility = JavaVersion.VERSION_17.toString()
     }
+
+    tasks.withType<Test> {
+        useJUnitPlatform()
+    }
 }
 
 subprojects {
@@ -27,5 +31,11 @@ subprojects {
         "compileOnly"(rootProject.libs.guice)
         "compileOnly"(rootProject.libs.adventure)
         "compileOnly"(rootProject.libs.socialismus)
+
+        // testing
+        "testImplementation"(rootProject.libs.bundles.testing)
+        "testImplementation"(rootProject.libs.guice)
+        "testImplementation"(rootProject.libs.adventure)
+        "testImplementation"(rootProject.libs.socialismus)
     }
 }

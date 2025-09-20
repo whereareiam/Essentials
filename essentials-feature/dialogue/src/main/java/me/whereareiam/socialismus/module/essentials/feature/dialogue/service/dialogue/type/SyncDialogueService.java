@@ -1,4 +1,4 @@
-package me.whereareiam.socialismus.module.essentials.feature.dialogue.service;
+package me.whereareiam.socialismus.module.essentials.feature.dialogue.service.dialogue.type;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -6,6 +6,7 @@ import com.google.inject.Singleton;
 import me.whereareiam.socialismus.api.input.container.PlayerContainerService;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.config.DialogueMessages;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.model.Dialogue;
+import me.whereareiam.socialismus.module.essentials.feature.dialogue.service.dialogue.AbstractDialogueService;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.sync.DialogueNetworkBridge;
 
 @Singleton

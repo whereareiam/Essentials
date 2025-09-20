@@ -8,7 +8,7 @@ import me.whereareiam.socialismus.api.model.player.DummyPlayer;
 import me.whereareiam.socialismus.api.output.command.CommandBase;
 import me.whereareiam.socialismus.api.output.command.CommandCooldown;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.config.DialogueCommands;
-import me.whereareiam.socialismus.module.essentials.feature.dialogue.service.DialogueManager;
+import me.whereareiam.socialismus.module.essentials.feature.dialogue.service.dialogue.DialogueManager;
 import org.incendo.cloud.annotations.Argument;
 import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.CommandDescription;
