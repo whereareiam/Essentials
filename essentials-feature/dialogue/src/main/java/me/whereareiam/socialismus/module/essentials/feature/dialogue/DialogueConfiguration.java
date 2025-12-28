@@ -3,7 +3,7 @@ package me.whereareiam.socialismus.module.essentials.feature.dialogue;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import me.whereareiam.socialismus.module.essentials.api.model.feature.Feature;
-import me.whereareiam.socialismus.module.essentials.api.output.FeatureInitializer;
+import me.whereareiam.socialismus.module.essentials.api.feature.FeatureInitializer;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.config.DialogueCommands;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.config.DialogueMessages;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.config.DialogueSettings;

@@ -3,25 +3,25 @@ package me.whereareiam.socialismus.module.essentials.common.feature;
 import com.google.inject.*;
 import com.google.inject.Module;
 import com.google.inject.name.Names;
-import jakarta.inject.Named;
-import jakarta.inject.Singleton;
-import me.whereareiam.socialismus.api.Logger;
-import me.whereareiam.socialismus.api.input.registry.Registry;
-import me.whereareiam.socialismus.api.model.CommandEntity;
-import me.whereareiam.socialismus.api.output.command.CommandBase;
-import me.whereareiam.socialismus.api.output.command.CommandService;
-import me.whereareiam.socialismus.module.essentials.api.input.FeatureManager;
+import com.google.inject.name.Named;
+import com.google.inject.Singleton;
+import me.whereareiam.commandant.model.CommandDefinition;
+import me.whereareiam.socialismus.logging.Logger;
+import me.whereareiam.socialismus.module.essentials.api.feature.FeatureManager;
 import me.whereareiam.socialismus.module.essentials.api.model.config.EssentialsSettings;
 import me.whereareiam.socialismus.module.essentials.api.model.config.FeaturesConfig;
 import me.whereareiam.socialismus.module.essentials.api.model.feature.CommandFeature;
 import me.whereareiam.socialismus.module.essentials.api.model.feature.Feature;
-import me.whereareiam.socialismus.module.essentials.api.output.CommandFeatureInitializer;
-import me.whereareiam.socialismus.module.essentials.api.output.FeatureInitializer;
+import me.whereareiam.socialismus.module.essentials.api.feature.CommandFeatureInitializer;
+import me.whereareiam.socialismus.module.essentials.api.feature.FeatureInitializer;
+import me.whereareiam.socialismus.service.CommandService;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Singleton
@@ -34,7 +34,6 @@ public class DefaultFeatureManager implements FeatureManager {
 	private final Path featuresPath;
 
 	private final Map<String, Class<? extends Module>> modules;
-	private final Registry<Map<String, CommandEntity>> commandRegistry;
 
 	private final Map<String, Feature> activeFeatures = new HashMap<>();
 
@@ -45,8 +44,7 @@ public class DefaultFeatureManager implements FeatureManager {
 			EssentialsSettings settings,
 			CommandService commandService,
 			@Named("featuresPath") Path featuresPath,
-			Map<String, Class<? extends Module>> modules,
-			Registry<Map<String, CommandEntity>> commandRegistry
+			Map<String, Class<? extends Module>> modules
 	) {
 		this.injector = injector;
 		this.features = features;
@@ -54,7 +52,6 @@ public class DefaultFeatureManager implements FeatureManager {
 		this.commandService = commandService;
 		this.featuresPath = featuresPath;
 		this.modules = modules;
-		this.commandRegistry = commandRegistry;
 	}
 
 	@Override
@@ -126,25 +123,27 @@ public class DefaultFeatureManager implements FeatureManager {
 		if (!(init instanceof CommandFeatureInitializer cfi))
 			return;
 
-		Map<String, CommandEntity> commands = cfi.getCommands();
+		Map<String, CommandDefinition> commands = cfi.getCommands();
 		if (commands == null || commands.isEmpty())
 			return;
 
-		commandRegistry.register(commands);
-
-		Map<String, Class<? extends CommandBase>> executors = cfi.getExecutors();
+		Map<String, Class<?>> executors = cfi.getExecutors();
 		if (executors == null || executors.isEmpty())
 			return;
 
-		for (Map.Entry<String, CommandEntity> entry : commands.entrySet()) {
+		List<Object> commandInstances = new ArrayList<>();
+		for (Map.Entry<String, CommandDefinition> entry : commands.entrySet()) {
 			String commandKey = entry.getKey();
 
 			if (executors.containsKey(commandKey)) {
-				Class<? extends CommandBase> commandClass = executors.get(commandKey);
-				CommandBase commandInstance = featureInjector.getInstance(commandClass);
-				commandService.registerCommand(commandInstance);
+				Class<?> commandClass = executors.get(commandKey);
+				Object commandInstance = featureInjector.getInstance(commandClass);
+				commandInstances.add(commandInstance);
 			}
 		}
+
+		// Register all commands at once
+		commandService.registerCommandInstances(commands, commandInstances.toArray());
 
 		if (announce) Logger.info("Registered commands for feature: %s", init.getId());
 	}

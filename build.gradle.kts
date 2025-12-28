@@ -2,24 +2,22 @@ defaultTasks("shadowJar")
 
 allprojects {
     version = (System.getenv("VERSION") ?: "dev")
+    group = "me.whereareiam"
 
     apply(plugin = "java")
+    apply(plugin = "maven-publish")
 
     tasks.withType<JavaCompile> {
         sourceCompatibility = JavaVersion.VERSION_17.toString()
         targetCompatibility = JavaVersion.VERSION_17.toString()
-    }
-
-    tasks.withType<Test> {
-        useJUnitPlatform()
     }
 }
 
 subprojects {
     repositories {
         mavenCentral()
-
-        maven("https://jitpack.io")
+        maven("https://maven.whereareiam.me/release")
+        maven("https://maven.whereareiam.me/development")
     }
 
     dependencies {
@@ -27,15 +25,11 @@ subprojects {
         "compileOnly"(rootProject.libs.lombok)
         "annotationProcessor"(rootProject.libs.lombok)
 
-        // general
         "compileOnly"(rootProject.libs.guice)
-        "compileOnly"(rootProject.libs.adventure)
         "compileOnly"(rootProject.libs.socialismus)
 
-        // testing
+        // test
         "testImplementation"(rootProject.libs.bundles.testing)
-        "testImplementation"(rootProject.libs.guice)
-        "testImplementation"(rootProject.libs.adventure)
-        "testImplementation"(rootProject.libs.socialismus)
+        "testRuntimeOnly"(rootProject.libs.junit.platform)
     }
 }

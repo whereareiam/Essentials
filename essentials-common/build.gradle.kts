@@ -1,3 +1,7 @@
 dependencies {
-    "compileOnly"(project(":essentials-common-api"))
+    "compileOnly"(project(":essentials-api"))
+}
+
+tasks.test {
+    useJUnitPlatform()
 }

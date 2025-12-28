@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import me.whereareiam.socialismus.api.model.CommandEntity;
 import me.whereareiam.socialismus.api.output.command.CommandBase;
 import me.whereareiam.socialismus.module.essentials.api.model.feature.CommandFeature;
-import me.whereareiam.socialismus.module.essentials.api.output.CommandFeatureInitializer;
+import me.whereareiam.socialismus.module.essentials.api.feature.CommandFeatureInitializer;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.command.MessageCommand;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.command.ReplyCommand;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.config.DialogueCommands;

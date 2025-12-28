@@ -8,7 +8,7 @@ import me.whereareiam.socialismus.api.model.CommandEntity;
 import me.whereareiam.socialismus.api.model.player.DummyPlayer;
 import me.whereareiam.socialismus.api.output.command.CommandBase;
 import me.whereareiam.socialismus.api.output.command.CommandCooldown;
-import me.whereareiam.socialismus.module.essentials.api.input.FeatureManager;
+import me.whereareiam.socialismus.module.essentials.api.feature.FeatureManager;
 import me.whereareiam.socialismus.module.essentials.api.model.config.EssentialsCommands;
 import me.whereareiam.socialismus.module.essentials.api.model.config.EssentialsMessages;
 import me.whereareiam.socialismus.module.essentials.api.model.feature.Feature;

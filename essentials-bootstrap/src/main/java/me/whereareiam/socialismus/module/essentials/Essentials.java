@@ -4,32 +4,18 @@ import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import lombok.RequiredArgsConstructor;
-import me.whereareiam.socialismus.api.Reloadable;
-import me.whereareiam.socialismus.api.input.container.PlayerContainerService;
-import me.whereareiam.socialismus.api.input.registry.ObjectMapperRegistry;
-import me.whereareiam.socialismus.api.input.registry.Registry;
-import me.whereareiam.socialismus.api.model.CommandEntity;
-import me.whereareiam.socialismus.api.output.PlatformInteractor;
-import me.whereareiam.socialismus.api.output.Scheduler;
-import me.whereareiam.socialismus.api.output.SerializationService;
-import me.whereareiam.socialismus.api.output.command.CommandService;
-import me.whereareiam.socialismus.api.output.config.ConfigurationLoader;
-import me.whereareiam.socialismus.api.output.config.ConfigurationManager;
-import me.whereareiam.socialismus.api.output.module.SocialisticModule;
-import me.whereareiam.socialismus.api.output.resource.sync.SyncService;
-import me.whereareiam.socialismus.module.essentials.api.input.FeatureManager;
+import me.whereareiam.socialismus.Reloadable;
+import me.whereareiam.socialismus.module.essentials.api.feature.FeatureManager;
 import me.whereareiam.socialismus.module.essentials.command.CommandRegistrar;
 import me.whereareiam.socialismus.module.essentials.common.CommonConfiguration;
-import me.whereareiam.socialismus.module.essentials.configuration.ConfigBinder;
 import me.whereareiam.socialismus.module.essentials.feature.FeatureConfiguration;
-
-import java.util.Map;
+import me.whereareiam.socialismus.registry.base.Registry;
+import me.whereareiam.socialismus.starter.ModuleStarter;
 
 @RequiredArgsConstructor(onConstructor_ = {@Inject})
-public class Essentials extends SocialisticModule {
+public class Essentials extends ModuleStarter {
 	private final Injector parentInjector;
 	private final Registry<Reloadable> reloadableRegistry;
-	private final Registry<Map<String, CommandEntity>> commandRegistry;
 	private Injector injector;
 
 	@Override
@@ -37,18 +23,9 @@ public class Essentials extends SocialisticModule {
 		injector =
 				Guice.createInjector(
 						new EssentialsInjectorConfiguration(
-								parentInjector.getInstance(ObjectMapperRegistry.class),
-								parentInjector.getInstance(PlatformInteractor.class),
-								parentInjector.getInstance(PlayerContainerService.class),
-								parentInjector.getInstance(SerializationService.class),
-								parentInjector.getInstance(SyncService.class),
-								reloadableRegistry,
-								commandRegistry,
-								parentInjector.getInstance(ConfigurationManager.class),
-								parentInjector.getInstance(ConfigurationLoader.class),
-								parentInjector.getInstance(CommandService.class)),
-						new CommonConfiguration(),
-						new ConfigBinder(workingPath),
+								parentInjector,
+								reloadableRegistry),
+						new CommonConfiguration(workingPath),
 						new FeatureConfiguration());
 	}
 
@@ -60,7 +37,6 @@ public class Essentials extends SocialisticModule {
 
 	@Override
 	public void onDisable() {
-		injector.getInstance(Scheduler.class).cancelByModule("essentials");
 	}
 
 	@Override
