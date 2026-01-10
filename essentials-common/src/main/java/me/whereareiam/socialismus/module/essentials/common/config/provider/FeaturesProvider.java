@@ -16,7 +16,6 @@ import java.nio.file.Path;
 public class FeaturesProvider extends EssentialsConfigProvider<FeaturesConfig> {
 	@Inject
 	public FeaturesProvider(
-			@Named("featuresPath") Path featuresPath,
 			@Named("workingPath") Path workingPath,
 			Registry<Reloadable> reloadableRegistry
 	) {

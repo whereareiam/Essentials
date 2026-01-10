@@ -89,21 +89,17 @@ public class ConversationService {
 		return cache.get(cacheKey, ConversationThread.class);
 	}
 
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	public List<String> getPlayerConversations(String playerName) {
 		String cacheKey = PLAYER_CONVERSATIONS_PREFIX + playerName.toLowerCase();
-		List<String> conversations = new ArrayList<>(cache.get(cacheKey));
 		
-		// Enforce max conversations limit
-		int maxConversations = settings.get().getMessageHistory().getMaxConversations();
-		if (conversations.size() > maxConversations) {
-			// Keep only the most recent conversations
-			conversations = conversations.subList(
-					conversations.size() - maxConversations, 
-					conversations.size()
-			);
-		}
+		// Get as a list object from cache (not a set)
+		Optional<List> cached = cache.get(cacheKey, List.class);
+		List<String> conversations = cached
+				.map(list -> (List<String>) list)
+				.orElse(new ArrayList<>());
 		
-		return conversations;
+		return new ArrayList<>(conversations); // Return defensive copy
 	}
 
 	public Optional<String> getLastConversationPartner(String playerName) {
@@ -127,12 +123,15 @@ public class ConversationService {
 	}
 
 
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	private void addPlayerConversation(String playerName, String conversationKey) {
 		String cacheKey = PLAYER_CONVERSATIONS_PREFIX + playerName.toLowerCase();
 		
-		// Get existing conversations
-		Set<String> existingConversations = cache.get(cacheKey);
-		List<String> conversations = new ArrayList<>(existingConversations);
+		// Get existing conversations as a List (ordered)
+		Optional<List> cached = cache.get(cacheKey, List.class);
+		List<String> conversations = cached
+				.map(list -> new ArrayList<>((List<String>) list))
+				.orElse(new ArrayList<>());
 		
 		// Remove if already exists (to re-add at end as most recent)
 		conversations.remove(conversationKey);
@@ -143,18 +142,23 @@ public class ConversationService {
 		// Enforce max conversations limit
 		int maxConversations = settings.get().getMessageHistory().getMaxConversations();
 		if (conversations.size() > maxConversations) {
+			// Identify conversations to remove (oldest ones)
+			List<String> toRemove = new ArrayList<>(conversations.subList(0, conversations.size() - maxConversations));
+			
+			// Delete the actual conversation data from cache
+			for (String oldConvKey : toRemove) {
+				cache.delete(CONVERSATION_PREFIX + oldConvKey);
+			}
+			
 			// Keep only the most recent conversations
-			conversations = conversations.subList(
+			conversations = new ArrayList<>(conversations.subList(
 					conversations.size() - maxConversations,
 					conversations.size()
-			);
+			));
 		}
 		
-		// Update cache (replace with limited list)
-		cache.delete(cacheKey);
-		for (String conv : conversations) {
-			cache.add(cacheKey, conv);
-		}
+		// Update cache with the ordered list
+		cache.put(cacheKey, conversations);
 	}
 
 	private void updatePlayerConversations(ConversationThread thread) {

@@ -142,9 +142,9 @@ class ConversationServiceTest {
 	void shouldGetPlayerConversations() {
 		// Given
 		String playerName = "alice";
-		Set<String> conversationKeys = Set.of("alice:bob", "alice:charlie");
-		when(cacheService.get("pm:player_conversations:alice"))
-				.thenReturn(conversationKeys);
+		List<String> conversationKeys = List.of("alice:bob", "alice:charlie");
+		when(cacheService.get("pm:player_conversations:alice", List.class))
+				.thenReturn(Optional.of(conversationKeys));
 
 		DialogueSettings settings = new DialogueSettings();
 		DialogueSettings.MessageHistory history = new DialogueSettings.MessageHistory();
@@ -156,7 +156,9 @@ class ConversationServiceTest {
 		List<String> result = conversationService.getPlayerConversations(playerName);
 
 		// Then
-		assertTrue(result.containsAll(conversationKeys) && conversationKeys.size() == result.size());
+		assertEquals(2, result.size());
+		assertTrue(result.contains("alice:bob"));
+		assertTrue(result.contains("alice:charlie"));
 	}
 
 	@Test
@@ -164,8 +166,9 @@ class ConversationServiceTest {
 		// Given
 		String playerName = "alice";
 		// The last conversation in the list should be the most recent
-		when(cacheService.get("pm:player_conversations:alice"))
-				.thenReturn(Set.of("alice:bob", "alice:charlie"));
+		List<String> conversationKeys = List.of("alice:bob", "alice:charlie");
+		when(cacheService.get("pm:player_conversations:alice", List.class))
+				.thenReturn(Optional.of(conversationKeys));
 
 		DialogueSettings settings = new DialogueSettings();
 		DialogueSettings.MessageHistory history = new DialogueSettings.MessageHistory();
@@ -177,17 +180,17 @@ class ConversationServiceTest {
 		Optional<String> result = conversationService.getLastConversationPartner(playerName);
 
 		// Then
-		// Should return one of the conversation partners (charlie or bob)
+		// Should return the last conversation partner (charlie - at end of list)
 		assertTrue(result.isPresent());
-		assertTrue(result.get().equals("bob") || result.get().equals("charlie"));
+		assertEquals("charlie", result.get());
 	}
 
 	@Test
 	void shouldReturnEmptyWhenNoConversations() {
 		// Given
 		String playerName = "alice";
-		when(cacheService.get("pm:player_conversations:alice"))
-				.thenReturn(Set.of());
+		when(cacheService.get("pm:player_conversations:alice", List.class))
+				.thenReturn(Optional.empty());
 
 		DialogueSettings settings = new DialogueSettings();
 		DialogueSettings.MessageHistory history = new DialogueSettings.MessageHistory();
@@ -232,6 +235,3 @@ class ConversationServiceTest {
 		);
 	}
 }
-
-
-
