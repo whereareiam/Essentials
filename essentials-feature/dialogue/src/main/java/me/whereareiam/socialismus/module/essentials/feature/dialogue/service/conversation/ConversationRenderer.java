@@ -4,8 +4,8 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import lombok.RequiredArgsConstructor;
-import me.whereareiam.socialismus.api.Serializer;
-import me.whereareiam.socialismus.api.model.player.DummyPlayer;
+import me.whereareiam.socialismus.Serializer;
+import me.whereareiam.socialismus.model.player.SocialismusPlayer;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.config.DialogueMessages;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.service.dialogue.DialogueErrorHandler;
 import net.kyori.adventure.text.Component;
@@ -17,7 +17,7 @@ import java.util.List;
 public class ConversationRenderer {
 	private final Provider<DialogueMessages> messages;
 
-	public Component renderConversationList(DummyPlayer sender, List<String> conversations) {
+	public Component renderConversationList(SocialismusPlayer sender, List<String> conversations) {
 		StringBuilder list = new StringBuilder();
 		list.append(messages.get().getCommands().getReply().getConversationListHeader()).append("\n");
 
@@ -31,7 +31,7 @@ public class ConversationRenderer {
 		return Serializer.serialize(sender, list.toString());
 	}
 
-	public Component renderReplyError(DummyPlayer sender, String errorType) {
+	public Component renderReplyError(SocialismusPlayer sender, String errorType) {
 		String template = switch (errorType) {
 			case DialogueErrorHandler.ERROR_NO_PREVIOUS_SENDER ->
 					messages.get().getCommands().getReply().getNoPreviousSender();
@@ -42,14 +42,10 @@ public class ConversationRenderer {
 		return Serializer.serialize(sender, template);
 	}
 
-	public Component renderSelfMessageError(DummyPlayer sender) {
+	public Component renderSelfMessageError(SocialismusPlayer sender) {
 		return Serializer.serialize(
 				sender,
 				messages.get().getCommands().getMessage().getSamePlayer()
 		);
-	}
-
-	public Component renderHistoryClearedMessage(DummyPlayer sender) {
-		return Serializer.serialize(sender, DialogueErrorHandler.SUCCESS_HISTORY_CLEARED);
 	}
 }

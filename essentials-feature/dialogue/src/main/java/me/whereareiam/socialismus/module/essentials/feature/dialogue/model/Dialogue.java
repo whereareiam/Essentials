@@ -4,14 +4,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import me.whereareiam.socialismus.api.model.player.DummyPlayer;
+import me.whereareiam.socialismus.model.player.SocialismusPlayer;
 
 @Getter
 @Setter
 @SuperBuilder
 @NoArgsConstructor
 public class Dialogue {
-	private DummyPlayer sender;
+	private SocialismusPlayer sender;
 	private String recipientName;
 	private String content;
 

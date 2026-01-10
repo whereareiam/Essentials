@@ -1,6 +1,6 @@
 package me.whereareiam.socialismus.module.essentials.feature.dialogue;
 
-import me.whereareiam.socialismus.api.model.player.DummyPlayer;
+import me.whereareiam.socialismus.model.player.SocialismusPlayer;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.model.Dialogue;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.model.Message;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.model.conversation.ConversationThread;
@@ -38,7 +38,7 @@ public class TestDataBuilder {
 				.lastActivity(Instant.now());
 	}
 
-	public static Message.MessageBuilder messageFrom(DummyPlayer sender, String recipientName) {
+	public static Message.MessageBuilder messageFrom(SocialismusPlayer sender, String recipientName) {
 		return Message.builder()
 				.id(UUID.randomUUID().toString())
 				.sender(sender)
@@ -48,13 +48,13 @@ public class TestDataBuilder {
 				.content("Test message");
 	}
 
-	public static DummyPlayer mockPlayer(String username) {
-		DummyPlayer player = mock(DummyPlayer.class);
+	public static SocialismusPlayer mockPlayer(String username) {
+		SocialismusPlayer player = mock(SocialismusPlayer.class);
 		when(player.getUsername()).thenReturn(username);
 		return player;
 	}
 
-	public static Dialogue createDialogue(DummyPlayer sender, String recipientName, String content) {
+	public static Dialogue createDialogue(SocialismusPlayer sender, String recipientName, String content) {
 		return Dialogue.builder()
 				.sender(sender)
 				.recipientName(recipientName)

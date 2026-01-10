@@ -1,7 +1,7 @@
 package me.whereareiam.socialismus.module.essentials.feature.dialogue.service.message;
 
 import com.google.inject.Singleton;
-import me.whereareiam.socialismus.api.model.player.DummyPlayer;
+import me.whereareiam.socialismus.model.player.SocialismusPlayer;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.model.Dialogue;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.model.Message;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.type.DeliveryStatus;
@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Singleton
 public class MessageFactory {
-	public Message createMessage(DummyPlayer sender, String recipient, String content, String conversationId) {
+	public Message createMessage(SocialismusPlayer sender, String recipient, String content, String conversationId) {
 		return Message.builder()
 				.id(UUID.randomUUID().toString())
 				.sender(sender)
@@ -23,7 +23,7 @@ public class MessageFactory {
 				.build();
 	}
 
-	public Dialogue createDialogue(DummyPlayer sender, String recipient, String content) {
+	public Dialogue createDialogue(SocialismusPlayer sender, String recipient, String content) {
 		return Dialogue.builder()
 				.sender(sender)
 				.recipientName(recipient)

@@ -4,13 +4,14 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import lombok.RequiredArgsConstructor;
-import me.whereareiam.socialismus.api.output.resource.CacheService;
+import me.whereareiam.socialismus.service.resource.CacheService;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.config.DialogueSettings;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.model.Message;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.model.conversation.ConversationKey;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.model.conversation.ConversationThread;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -54,13 +55,27 @@ public class ConversationService {
 	}
 
 	public void addMessage(ConversationThread thread, Message message) {
+		DialogueSettings.MessageHistory historySettings = settings.get().getMessageHistory();
+		
+		// Check if message history is enabled
+		if (!historySettings.isEnabled()) {
+			return;
+		}
+
+		// Enforce max messages per conversation
+		int maxMessages = historySettings.getMaxMessagesPerConversation();
+		if (thread.getMessages().size() >= maxMessages) {
+			// Remove oldest message to make room
+			thread.getMessages().remove(0);
+		}
+
 		thread.addMessage(message);
 		message.setConversationId(thread.getId());
 
 		// Update cache
 		ConversationKey key = ConversationKey.of(thread.getParticipants());
 		String cacheKey = CONVERSATION_PREFIX + key.getKey();
-		Duration ttl = Duration.parse(settings.get().getMessageHistory().getTtl());
+		Duration ttl = Duration.parse(historySettings.getTtl());
 		cache.put(cacheKey, thread, ttl);
 
 		// Async update for performance
@@ -74,10 +89,17 @@ public class ConversationService {
 		return cache.get(cacheKey, ConversationThread.class);
 	}
 
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	public List<String> getPlayerConversations(String playerName) {
 		String cacheKey = PLAYER_CONVERSATIONS_PREFIX + playerName.toLowerCase();
-
-		return cache.get(cacheKey).stream().toList();
+		
+		// Get as a list object from cache (not a set)
+		Optional<List> cached = cache.get(cacheKey, List.class);
+		List<String> conversations = cached
+				.map(list -> (List<String>) list)
+				.orElse(new ArrayList<>());
+		
+		return new ArrayList<>(conversations); // Return defensive copy
 	}
 
 	public Optional<String> getLastConversationPartner(String playerName) {
@@ -101,9 +123,42 @@ public class ConversationService {
 	}
 
 
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	private void addPlayerConversation(String playerName, String conversationKey) {
 		String cacheKey = PLAYER_CONVERSATIONS_PREFIX + playerName.toLowerCase();
-		cache.add(cacheKey, conversationKey);
+		
+		// Get existing conversations as a List (ordered)
+		Optional<List> cached = cache.get(cacheKey, List.class);
+		List<String> conversations = cached
+				.map(list -> new ArrayList<>((List<String>) list))
+				.orElse(new ArrayList<>());
+		
+		// Remove if already exists (to re-add at end as most recent)
+		conversations.remove(conversationKey);
+		
+		// Add to end as most recent
+		conversations.add(conversationKey);
+		
+		// Enforce max conversations limit
+		int maxConversations = settings.get().getMessageHistory().getMaxConversations();
+		if (conversations.size() > maxConversations) {
+			// Identify conversations to remove (oldest ones)
+			List<String> toRemove = new ArrayList<>(conversations.subList(0, conversations.size() - maxConversations));
+			
+			// Delete the actual conversation data from cache
+			for (String oldConvKey : toRemove) {
+				cache.delete(CONVERSATION_PREFIX + oldConvKey);
+			}
+			
+			// Keep only the most recent conversations
+			conversations = new ArrayList<>(conversations.subList(
+					conversations.size() - maxConversations,
+					conversations.size()
+			));
+		}
+		
+		// Update cache with the ordered list
+		cache.put(cacheKey, conversations);
 	}
 
 	private void updatePlayerConversations(ConversationThread thread) {

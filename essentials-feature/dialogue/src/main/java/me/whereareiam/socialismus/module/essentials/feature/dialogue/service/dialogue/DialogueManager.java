@@ -3,7 +3,7 @@ package me.whereareiam.socialismus.module.essentials.feature.dialogue.service.di
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import lombok.RequiredArgsConstructor;
-import me.whereareiam.socialismus.api.model.player.DummyPlayer;
+import me.whereareiam.socialismus.model.player.SocialismusPlayer;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.model.Dialogue;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.model.Message;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.model.conversation.ConversationThread;
@@ -12,7 +12,6 @@ import me.whereareiam.socialismus.module.essentials.feature.dialogue.service.con
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.service.message.MessageDeliveryCoordinator;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.service.message.MessageFactory;
 
-import java.util.List;
 import java.util.Optional;
 
 @Singleton
@@ -24,7 +23,7 @@ public final class DialogueManager {
 	private final DialogueErrorHandler errorHandler;
 	private final MessageDeliveryCoordinator deliveryCoordinator;
 
-	public void send(DummyPlayer sender, String rawRecipient, String rawMessage) {
+	public void send(SocialismusPlayer sender, String rawRecipient, String rawMessage) {
 		if (validator.isSelfMessage(sender, rawRecipient)) {
 			errorHandler.sendSelfMessageError(sender);
 			return;
@@ -40,7 +39,7 @@ public final class DialogueManager {
 		conversationService.addMessage(thread, message);
 	}
 
-	public void sendReply(DummyPlayer sender, String rawMessage) {
+	public void sendReply(SocialismusPlayer sender, String rawMessage) {
 		if (!validator.isReplyEnabled()) {
 			errorHandler.sendReplyError(sender, DialogueErrorHandler.ERROR_NO_PREVIOUS_SENDER);
 			return;
@@ -55,7 +54,7 @@ public final class DialogueManager {
 		send(sender, lastPartner.get(), rawMessage);
 	}
 
-	public void sendReplyTo(DummyPlayer sender, String recipient, String rawMessage) {
+	public void sendReplyTo(SocialismusPlayer sender, String recipient, String rawMessage) {
 		if (!validator.isReplyEnabled()) {
 			errorHandler.sendReplyError(sender, DialogueErrorHandler.ERROR_NO_PREVIOUS_SENDER);
 			return;
@@ -67,30 +66,5 @@ public final class DialogueManager {
 		}
 
 		send(sender, recipient, rawMessage);
-	}
-
-	public void showRecentConversations(DummyPlayer sender) {
-		List<String> conversations = conversationService.getPlayerConversations(sender.getUsername());
-		if (conversations.isEmpty()) {
-			errorHandler.sendReplyError(sender, DialogueErrorHandler.ERROR_NO_CONVERSATIONS);
-		} else {
-			errorHandler.sendConversationList(sender, conversations);
-		}
-	}
-
-	public void clearConversationHistory(DummyPlayer sender) {
-		List<String> conversations = conversationService.getPlayerConversations(sender.getUsername());
-		deactivateAllConversations(conversations);
-		errorHandler.sendHistoryClearedMessage(sender);
-	}
-
-	// Conversation management helper
-	private void deactivateAllConversations(List<String> conversations) {
-		for (String conversationKey : conversations) {
-			String[] participants = conversationKey.split(":");
-			if (participants.length == 2) {
-				conversationService.deactivateConversation(participants[0], participants[1]);
-			}
-		}
 	}
 }

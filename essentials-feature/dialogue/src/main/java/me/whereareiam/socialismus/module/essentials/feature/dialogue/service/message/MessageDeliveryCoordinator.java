@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import lombok.RequiredArgsConstructor;
-import me.whereareiam.socialismus.api.Constants;
+import me.whereareiam.socialismus.Constants;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.config.DialogueSettings;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.model.Dialogue;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.model.Message;
@@ -34,7 +34,7 @@ public class MessageDeliveryCoordinator {
 	}
 
 	public void syncMessageToOtherServers(Dialogue dialogue) {
-		dialogue.setOrigin(Constants.IDENTIFIER);
+		dialogue.setOrigin(Constants.Synchronization.IDENTIFIER);
 		syncDialogueService.publish(dialogue);
 	}
 
@@ -51,3 +51,4 @@ public class MessageDeliveryCoordinator {
 		handleUndeliverableMessage(dialogue, delivered);
 	}
 }
+

@@ -4,11 +4,10 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import lombok.RequiredArgsConstructor;
-import me.whereareiam.socialismus.api.Constants;
-import me.whereareiam.socialismus.api.Logger;
-import me.whereareiam.socialismus.api.output.PlatformInteractor;
-import me.whereareiam.socialismus.api.output.SerializationService;
-import me.whereareiam.socialismus.api.output.resource.sync.SyncService;
+import me.whereareiam.socialismus.Constants;
+import me.whereareiam.socialismus.logging.Logger;
+import me.whereareiam.socialismus.service.SerializationService;
+import me.whereareiam.socialismus.service.resource.sync.SyncService;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.config.DialogueSettings;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.model.DeliveryConfirmation;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.model.Dialogue;
@@ -27,7 +26,6 @@ public final class DialogueNetworkBridge {
 	private final SyncService sync;
 	private final Provider<DialogueSettings> settings;
 	private final SerializationService serializer;
-	private final PlatformInteractor platform;
 	private final LocalDialogueService dialogueService;
 
 	public void initialize() {
@@ -36,10 +34,11 @@ public final class DialogueNetworkBridge {
 	}
 
 	public void publish(Dialogue pm) {
-		if (!settings.get().getSynchronization().isEnabled()) return;
+		DialogueSettings.Synchronization syncSettings = settings.get().getSynchronization();
+		if (!syncSettings.isEnabled()) return;
 
 		try {
-			pm.setOrigin(Constants.IDENTIFIER);
+			pm.setOrigin(Constants.Synchronization.IDENTIFIER);
 			sync.publish(CHANNEL, serializer.serialize(pm));
 			Logger.debug("Synced PM from " + pm.getSender().getUsername());
 		} catch (Exception ex) {
@@ -48,13 +47,13 @@ public final class DialogueNetworkBridge {
 	}
 
 	public void subscribe() {
-		if (!settings.get().getSynchronization().isEnabled()) return;
+		DialogueSettings.Synchronization syncSettings = settings.get().getSynchronization();
+		if (!syncSettings.isEnabled()) return;
 
-		sync.subscribe(CHANNEL, (c, data) -> {
+		this.sync.subscribe(CHANNEL, (c, data) -> {
 			try {
 				Dialogue pm = serializer.deserialize(data, Dialogue.class);
-				if (Constants.IDENTIFIER.equals(pm.getOrigin())) return;
-				pm.getSender().setInteractor(platform);
+				if (Constants.Synchronization.IDENTIFIER.equals(pm.getOrigin())) return;
 
 				boolean delivered = dialogueService.deliverLocally(pm);
 
@@ -69,15 +68,16 @@ public final class DialogueNetworkBridge {
 	}
 
 	private void subscribeToDeliveryConfirmations() {
-		if (!settings.get().getSynchronization().isEnabled()) return;
+		DialogueSettings.Synchronization syncSettings = settings.get().getSynchronization();
+		if (!syncSettings.isEnabled()) return;
 
 		sync.subscribe(DELIVERY_CHANNEL, (c, data) -> {
 			try {
 				DeliveryConfirmation confirmation = serializer.deserialize(data, DeliveryConfirmation.class);
-				if (Constants.IDENTIFIER.equals(confirmation.getOriginServer())) return;
+				if (Constants.Synchronization.IDENTIFIER.equals(confirmation.getOriginServer())) return;
 
 				// Update local message status to DELIVERED_REMOTELY
-				updateMessageDeliveryStatus(confirmation);
+				Logger.debug("Message delivered remotely: " + confirmation.getSenderName() + " -> " + confirmation.getRecipientName());
 				Logger.debug("Received delivery confirmation for message: " + confirmation.getId());
 			} catch (Exception ex) {
 				Logger.warn("Bad delivery confirmation packet: " + ex);
@@ -93,7 +93,7 @@ public final class DialogueNetworkBridge {
 					.recipientName(pm.getRecipientName())
 					.status(DeliveryStatus.DELIVERED_REMOTELY)
 					.originServer(pm.getOrigin())
-					.deliveryServer(Constants.IDENTIFIER)
+					.deliveryServer(Constants.Synchronization.IDENTIFIER)
 					.deliveryTime(Instant.now())
 					.build();
 
@@ -102,9 +102,5 @@ public final class DialogueNetworkBridge {
 		} catch (Exception ex) {
 			Logger.warn("Failed to send delivery confirmation: " + ex);
 		}
-	}
-
-	private void updateMessageDeliveryStatus(DeliveryConfirmation confirmation) {
-		Logger.debug("Message delivered remotely: " + confirmation.getSenderName() + " -> " + confirmation.getRecipientName());
 	}
 }

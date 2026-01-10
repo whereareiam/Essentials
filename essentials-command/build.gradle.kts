@@ -1,4 +1,4 @@
 dependencies {
-    "compileOnly"(project(":essentials-common-api"))
-    "compileOnly"(libs.bundles.cloud)
+    "compileOnly"(project(":essentials-api"))
+    "compileOnly"(libs.cloud.annotations)
 }

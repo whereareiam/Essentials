@@ -2,41 +2,43 @@ package me.whereareiam.socialismus.module.essentials.feature.dialogue.service.di
 
 import com.google.inject.Provider;
 import lombok.AllArgsConstructor;
-import me.whereareiam.socialismus.api.Serializer;
-import me.whereareiam.socialismus.api.input.container.PlayerContainerService;
-import me.whereareiam.socialismus.api.model.player.DummyPlayer;
-import me.whereareiam.socialismus.api.model.serializer.SerializerContent;
-import me.whereareiam.socialismus.api.model.serializer.SerializerPlaceholder;
+import me.whereareiam.keystone.model.SerializerContent;
+import me.whereareiam.socialismus.Serializer;
+import me.whereareiam.socialismus.model.player.SocialismusPlayer;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.config.DialogueMessages;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.model.Dialogue;
 import net.kyori.adventure.text.Component;
 
-import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 public abstract class AbstractDialogueService {
-	protected final PlayerContainerService players;
 	protected final Provider<DialogueMessages> messages;
 
-	protected List<SerializerPlaceholder> placeholders(Dialogue pm) {
-		return List.of(
-				new SerializerPlaceholder("{senderName}", pm.getSender().getUsername()),
-				new SerializerPlaceholder("{recipientName}", pm.getRecipientName()),
-				new SerializerPlaceholder("{message}", pm.getContent())
+	protected Map<String, String> placeholders(Dialogue pm) {
+		return Map.of(
+				"{senderName}", pm.getSender().getUsername(),
+				"{recipientName}", pm.getRecipientName(),
+				"{message}", pm.getContent()
 		);
 	}
 
 	protected Component render(
-			DummyPlayer viewer, List<SerializerPlaceholder> ph, String template
+			SocialismusPlayer viewer, Map<String, String> placeholders, String template
 	) {
-		return Serializer.serialize(new SerializerContent(viewer, ph, template));
+		return Serializer.serialize(SerializerContent.builder()
+				.receiver(viewer)
+				.message(template)
+				.placeholders(placeholders)
+				.build());
 	}
 
-	protected Component noRecipient(DummyPlayer sender, String recipient) {
+	protected Component noRecipient(SocialismusPlayer sender, String recipient) {
 		String tpl = messages.get().getCommands().getMessage().getNoRecipient();
-		return Serializer.serialize(new SerializerContent(
-				sender,
-				List.of(new SerializerPlaceholder("{recipientName}", recipient)),
-				tpl));
+		return Serializer.serialize(SerializerContent.builder()
+				.receiver(sender)
+				.message(tpl)
+				.placeholder("{recipientName}", recipient)
+				.build());
 	}
 }

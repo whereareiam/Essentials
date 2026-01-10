@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -39,7 +39,7 @@ class ReplyTargetProviderTest {
 		Collection<String> result = replyTargetProvider.suggestReplyTargets(playerName);
 
 		// Then
-		assertThat(result).containsExactlyElementsOf(conversations);
+		assertEquals(conversations, result);
 	}
 
 	@Test
@@ -57,11 +57,11 @@ class ReplyTargetProviderTest {
 		Collection<String> result = replyTargetProvider.suggestReplyTargets(playerName);
 
 		// Then
-		assertThat(result).hasSize(10);
-		assertThat(result).containsExactly(
+		assertEquals(10, result.size());
+		assertEquals(List.of(
 				"alice:player0", "alice:player1", "alice:player2", "alice:player3", "alice:player4",
 				"alice:player5", "alice:player6", "alice:player7", "alice:player8", "alice:player9"
-		);
+		), result);
 	}
 
 	@Test
@@ -75,7 +75,7 @@ class ReplyTargetProviderTest {
 		Collection<String> result = replyTargetProvider.suggestReplyTargets(playerName);
 
 		// Then
-		assertThat(result).isEmpty();
+		assertTrue(result.isEmpty());
 	}
 
 	@Test
@@ -91,6 +91,7 @@ class ReplyTargetProviderTest {
 		Collection<String> conversationPartners = replyTargetProvider.suggestConversationPartners(playerName);
 
 		// Then
-		assertThat(replyTargets).isEqualTo(conversationPartners);
+		assertEquals(conversationPartners, replyTargets);
 	}
 }
+
