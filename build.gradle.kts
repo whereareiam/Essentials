@@ -25,7 +25,6 @@ subprojects {
         "compileOnly"(rootProject.libs.lombok)
         "annotationProcessor"(rootProject.libs.lombok)
 
-        "compileOnly"(rootProject.libs.guice)
         "compileOnly"(rootProject.libs.socialismus)
 
         // test

@@ -3,13 +3,12 @@
 # plugins
 shadow = "9.3.0"
 
-socialismus = "dev-9849600"
+socialismus = "dev-c34993b"
 
 # compile time processing
 lombok = "1.18.42"
 
 # general
-guice = "7.0.0"
 cloud = "2.0.0"
 
 # testing
@@ -24,9 +23,6 @@ socialismus = { group = "me.whereareiam", name = "Socialismus", version.ref = "s
 lombok = { group = "org.projectlombok", name = "lombok", version.ref = "lombok" }
 
 # general
-guice = { group = "com.google.inject", name = "guice", version.ref = "guice" }
-
-# cloud
 cloud-annotations = { group = "org.incendo", name = "cloud-annotations", version.ref = "cloud" }
 
 # testing
