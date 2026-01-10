@@ -1,7 +1,7 @@
 package me.whereareiam.socialismus.module.essentials.feature.dialogue.service;
 
 import com.google.inject.Provider;
-import me.whereareiam.socialismus.api.output.resource.CacheService;
+import me.whereareiam.socialismus.service.resource.CacheService;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.TestDataBuilder;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.config.DialogueSettings;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.model.Message;
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -48,15 +48,26 @@ class ConversationServiceTest {
 		when(cacheService.get(anyString(), eq(ConversationThread.class)))
 				.thenReturn(Optional.empty());
 
+		DialogueSettings settings = new DialogueSettings();
+		DialogueSettings.MessageHistory history = new DialogueSettings.MessageHistory();
+		history.setTtl("PT24H");
+		history.setEnabled(true);
+		history.setMaxConversations(10);
+		history.setMaxMessagesPerConversation(50);
+		settings.setMessageHistory(history);
+		when(settingsProvider.get()).thenReturn(settings);
+
 		// When
 		ConversationThread result = conversationService.getOrCreateConversation(player1, player2);
 
 		// Then
-		assertThat(result).isNotNull();
-		assertThat(result.getParticipants()).containsExactlyInAnyOrder(player1, player2);
-		assertThat(result.isActive()).isTrue();
-		assertThat(result.getMessageCount()).isZero();
-		assertThat(result.getId()).isNotNull();
+		assertNotNull(result);
+		assertTrue(result.getParticipants().contains(player1));
+		assertTrue(result.getParticipants().contains(player2));
+		assertEquals(2, result.getParticipants().size());
+		assertTrue(result.isActive());
+		assertEquals(0, result.getMessageCount());
+		assertNotNull(result.getId());
 
 		// Verify conversation was cached
 		verify(cacheService).put(
@@ -82,8 +93,8 @@ class ConversationServiceTest {
 		ConversationThread result = conversationService.getOrCreateConversation(player1, player2);
 
 		// Then
-		assertThat(result).isSameAs(existingThread);
-		assertThat(result.getMessageCount()).isEqualTo(5);
+		assertSame(existingThread, result);
+		assertEquals(5, result.getMessageCount());
 
 		// Verify no new conversation was created
 		verify(cacheService, never()).put(anyString(), any(ConversationThread.class), any(Duration.class));
@@ -101,14 +112,23 @@ class ConversationServiceTest {
 				TestDataBuilder.mockPlayer("alice"), "bob"
 		).build();
 
+		DialogueSettings settings = new DialogueSettings();
+		DialogueSettings.MessageHistory history = new DialogueSettings.MessageHistory();
+		history.setTtl("PT24H");
+		history.setEnabled(true);
+		history.setMaxConversations(10);
+		history.setMaxMessagesPerConversation(50);
+		settings.setMessageHistory(history);
+		when(settingsProvider.get()).thenReturn(settings);
+
 		// When
 		conversationService.addMessage(thread, message);
 
 		// Then
-		assertThat(thread.getMessages()).contains(message);
-		assertThat(thread.getLastSender()).isEqualTo("alice");
-		assertThat(thread.getMessageCount()).isEqualTo(3);
-		assertThat(message.getConversationId()).isEqualTo(thread.getId());
+		assertTrue(thread.getMessages().contains(message));
+		assertEquals("alice", thread.getLastSender());
+		assertEquals(3, thread.getMessageCount());
+		assertEquals(thread.getId(), message.getConversationId());
 
 		// Verify conversation was updated in cache
 		verify(cacheService).put(
@@ -126,11 +146,17 @@ class ConversationServiceTest {
 		when(cacheService.get("pm:player_conversations:alice"))
 				.thenReturn(conversationKeys);
 
+		DialogueSettings settings = new DialogueSettings();
+		DialogueSettings.MessageHistory history = new DialogueSettings.MessageHistory();
+		history.setMaxConversations(10);
+		settings.setMessageHistory(history);
+		when(settingsProvider.get()).thenReturn(settings);
+
 		// When
 		List<String> result = conversationService.getPlayerConversations(playerName);
 
 		// Then
-		assertThat(result).containsExactlyInAnyOrderElementsOf(conversationKeys);
+		assertTrue(result.containsAll(conversationKeys) && conversationKeys.size() == result.size());
 	}
 
 	@Test
@@ -141,13 +167,19 @@ class ConversationServiceTest {
 		when(cacheService.get("pm:player_conversations:alice"))
 				.thenReturn(Set.of("alice:bob", "alice:charlie"));
 
+		DialogueSettings settings = new DialogueSettings();
+		DialogueSettings.MessageHistory history = new DialogueSettings.MessageHistory();
+		history.setMaxConversations(10);
+		settings.setMessageHistory(history);
+		when(settingsProvider.get()).thenReturn(settings);
+
 		// When
 		Optional<String> result = conversationService.getLastConversationPartner(playerName);
 
 		// Then
 		// Should return one of the conversation partners (charlie or bob)
-		assertThat(result).isPresent();
-		assertThat(result.get()).isIn("bob", "charlie");
+		assertTrue(result.isPresent());
+		assertTrue(result.get().equals("bob") || result.get().equals("charlie"));
 	}
 
 	@Test
@@ -157,11 +189,17 @@ class ConversationServiceTest {
 		when(cacheService.get("pm:player_conversations:alice"))
 				.thenReturn(Set.of());
 
+		DialogueSettings settings = new DialogueSettings();
+		DialogueSettings.MessageHistory history = new DialogueSettings.MessageHistory();
+		history.setMaxConversations(10);
+		settings.setMessageHistory(history);
+		when(settingsProvider.get()).thenReturn(settings);
+
 		// When
 		Optional<String> result = conversationService.getLastConversationPartner(playerName);
 
 		// Then
-		assertThat(result).isEmpty();
+		assertTrue(result.isEmpty());
 	}
 
 	@Test
@@ -176,11 +214,17 @@ class ConversationServiceTest {
 		when(cacheService.get("pm:conversation:alice:bob", ConversationThread.class))
 				.thenReturn(Optional.of(activeThread));
 
+		DialogueSettings settings = new DialogueSettings();
+		DialogueSettings.MessageHistory history = new DialogueSettings.MessageHistory();
+		history.setTtl("PT24H");
+		settings.setMessageHistory(history);
+		when(settingsProvider.get()).thenReturn(settings);
+
 		// When
 		conversationService.deactivateConversation(player1, player2);
 
 		// Then
-		assertThat(activeThread.isActive()).isFalse();
+		assertFalse(activeThread.isActive());
 		verify(cacheService).put(
 				eq("pm:conversation:alice:bob"),
 				eq(activeThread),
@@ -188,3 +232,6 @@ class ConversationServiceTest {
 		);
 	}
 }
+
+
+

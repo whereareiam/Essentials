@@ -1,6 +1,6 @@
 package me.whereareiam.socialismus.module.essentials.feature.dialogue.service;
 
-import me.whereareiam.socialismus.api.model.player.DummyPlayer;
+import me.whereareiam.socialismus.model.player.SocialismusPlayer;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.TestDataBuilder;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.model.conversation.ConversationThread;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.service.conversation.ConversationService;
@@ -56,7 +56,7 @@ class DialogueManagerTest {
 	@Test
 	void shouldProcessValidMessageSuccessfully() {
 		// Given
-		DummyPlayer sender = TestDataBuilder.mockPlayer("alice");
+		SocialismusPlayer sender = TestDataBuilder.mockPlayer("alice");
 		String recipient = "bob";
 		String message = "Hello Bob!";
 
@@ -81,7 +81,7 @@ class DialogueManagerTest {
 	@Test
 	void shouldProcessReplyWithValidLastPartner() {
 		// Given
-		DummyPlayer sender = TestDataBuilder.mockPlayer("alice");
+		SocialismusPlayer sender = TestDataBuilder.mockPlayer("alice");
 		String message = "Reply message";
 
 		ConversationThread thread = TestDataBuilder.conversationThreadBetween("alice", "bob").build();
@@ -108,7 +108,7 @@ class DialogueManagerTest {
 	@Test
 	void shouldValidateReplyToSpecificPlayer() {
 		// Given
-		DummyPlayer sender = TestDataBuilder.mockPlayer("alice");
+		SocialismusPlayer sender = TestDataBuilder.mockPlayer("alice");
 		String recipient = "bob";
 		String message = "Reply to Bob";
 
@@ -133,3 +133,4 @@ class DialogueManagerTest {
 	}
 
 }
+

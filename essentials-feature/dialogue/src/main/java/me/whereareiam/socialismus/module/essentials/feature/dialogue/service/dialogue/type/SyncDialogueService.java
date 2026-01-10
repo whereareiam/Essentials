@@ -3,7 +3,6 @@ package me.whereareiam.socialismus.module.essentials.feature.dialogue.service.di
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
-import me.whereareiam.socialismus.api.input.container.PlayerContainerService;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.config.DialogueMessages;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.model.Dialogue;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.service.dialogue.AbstractDialogueService;
@@ -15,11 +14,10 @@ public final class SyncDialogueService extends AbstractDialogueService {
 
 	@Inject
 	public SyncDialogueService(
-			PlayerContainerService players,
 			Provider<DialogueMessages> messages,
 			DialogueNetworkBridge bridge
 	) {
-		super(players, messages);
+		super(messages);
 		this.bridge = bridge;
 	}
 

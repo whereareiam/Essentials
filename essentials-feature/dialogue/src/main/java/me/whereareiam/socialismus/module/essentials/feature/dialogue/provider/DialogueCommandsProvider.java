@@ -4,55 +4,35 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
-import me.whereareiam.socialismus.api.Reloadable;
-import me.whereareiam.socialismus.api.input.registry.Registry;
-import me.whereareiam.socialismus.api.output.config.ConfigurationLoader;
-import me.whereareiam.socialismus.api.output.config.ConfigurationManager;
+import me.whereareiam.configura.Config;
+import me.whereareiam.socialismus.Reloadable;
+import me.whereareiam.socialismus.config.ConfigProvider;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.config.DialogueCommands;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.template.DialogueCommandsTemplate;
+import me.whereareiam.socialismus.registry.base.Registry;
 
 import java.nio.file.Path;
 
 @Singleton
-public class DialogueCommandsProvider implements Provider<DialogueCommands>, Reloadable {
+public class DialogueCommandsProvider extends ConfigProvider<DialogueCommands> implements Provider<DialogueCommands> {
 	private final Path featurePath;
-	private final ConfigurationLoader configLoader;
-
-	private DialogueCommands commands;
 
 	@Inject
 	public DialogueCommandsProvider(
 			@Named("featurePath") Path featurePath,
-			ConfigurationLoader configLoader,
-			ConfigurationManager configManager,
-			DialogueCommandsTemplate template,
 			Registry<Reloadable> reloadableRegistry
 	) {
-		System.out.println("Initializing DialogueCommandsProvider...");
 		this.featurePath = featurePath;
-		this.configLoader = configLoader;
-
-		configManager.addTemplate(DialogueCommands.class, template);
-
 		reloadableRegistry.register(this);
-		get();
 	}
 
 	@Override
-	public DialogueCommands get() {
-		if (commands != null) return commands;
-
-		load();
-
-		return commands;
+	protected DialogueCommands load() {
+		return Config.update(featurePath.resolve("commands"), DialogueCommands.class);
 	}
 
 	@Override
-	public void reload() {
-		load();
-	}
-
-	private void load() {
-		commands = configLoader.load(featurePath.resolve("commands"), DialogueCommands.class);
+	protected void registerTemplate() {
+		Config.registerTemplate(DialogueCommandsTemplate.class);
 	}
 }

@@ -23,9 +23,11 @@ import me.whereareiam.socialismus.module.essentials.feature.dialogue.service.mes
 public class DialogueConfiguration extends AbstractModule {
 	@Override
 	protected void configure() {
+		// Bind config classes to their providers
 		bind(DialogueSettings.class).toProvider(DialogueSettingsProvider.class);
 		bind(DialogueMessages.class).toProvider(DialogueMessagesProvider.class);
 		bind(DialogueCommands.class).toProvider(DialogueCommandsProvider.class);
+		
 		bind(LocalDialogueService.class).asEagerSingleton();
 		bind(SyncDialogueService.class).asEagerSingleton();
 		bind(ConversationService.class).asEagerSingleton();

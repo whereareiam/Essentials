@@ -9,5 +9,5 @@ import java.util.Map;
 @Getter
 @Setter
 public class FeaturesConfig {
-	private Map<String, ? extends Feature> features;
+	private Map<String, Feature> features;
 }

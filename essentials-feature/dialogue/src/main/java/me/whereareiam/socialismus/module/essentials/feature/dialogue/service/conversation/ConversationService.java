@@ -4,13 +4,14 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import lombok.RequiredArgsConstructor;
-import me.whereareiam.socialismus.api.output.resource.CacheService;
+import me.whereareiam.socialismus.service.resource.CacheService;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.config.DialogueSettings;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.model.Message;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.model.conversation.ConversationKey;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.model.conversation.ConversationThread;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -54,13 +55,27 @@ public class ConversationService {
 	}
 
 	public void addMessage(ConversationThread thread, Message message) {
+		DialogueSettings.MessageHistory historySettings = settings.get().getMessageHistory();
+		
+		// Check if message history is enabled
+		if (!historySettings.isEnabled()) {
+			return;
+		}
+
+		// Enforce max messages per conversation
+		int maxMessages = historySettings.getMaxMessagesPerConversation();
+		if (thread.getMessages().size() >= maxMessages) {
+			// Remove oldest message to make room
+			thread.getMessages().remove(0);
+		}
+
 		thread.addMessage(message);
 		message.setConversationId(thread.getId());
 
 		// Update cache
 		ConversationKey key = ConversationKey.of(thread.getParticipants());
 		String cacheKey = CONVERSATION_PREFIX + key.getKey();
-		Duration ttl = Duration.parse(settings.get().getMessageHistory().getTtl());
+		Duration ttl = Duration.parse(historySettings.getTtl());
 		cache.put(cacheKey, thread, ttl);
 
 		// Async update for performance
@@ -76,8 +91,19 @@ public class ConversationService {
 
 	public List<String> getPlayerConversations(String playerName) {
 		String cacheKey = PLAYER_CONVERSATIONS_PREFIX + playerName.toLowerCase();
-
-		return cache.get(cacheKey).stream().toList();
+		List<String> conversations = new ArrayList<>(cache.get(cacheKey));
+		
+		// Enforce max conversations limit
+		int maxConversations = settings.get().getMessageHistory().getMaxConversations();
+		if (conversations.size() > maxConversations) {
+			// Keep only the most recent conversations
+			conversations = conversations.subList(
+					conversations.size() - maxConversations, 
+					conversations.size()
+			);
+		}
+		
+		return conversations;
 	}
 
 	public Optional<String> getLastConversationPartner(String playerName) {
@@ -103,7 +129,32 @@ public class ConversationService {
 
 	private void addPlayerConversation(String playerName, String conversationKey) {
 		String cacheKey = PLAYER_CONVERSATIONS_PREFIX + playerName.toLowerCase();
-		cache.add(cacheKey, conversationKey);
+		
+		// Get existing conversations
+		Set<String> existingConversations = cache.get(cacheKey);
+		List<String> conversations = new ArrayList<>(existingConversations);
+		
+		// Remove if already exists (to re-add at end as most recent)
+		conversations.remove(conversationKey);
+		
+		// Add to end as most recent
+		conversations.add(conversationKey);
+		
+		// Enforce max conversations limit
+		int maxConversations = settings.get().getMessageHistory().getMaxConversations();
+		if (conversations.size() > maxConversations) {
+			// Keep only the most recent conversations
+			conversations = conversations.subList(
+					conversations.size() - maxConversations,
+					conversations.size()
+			);
+		}
+		
+		// Update cache (replace with limited list)
+		cache.delete(cacheKey);
+		for (String conv : conversations) {
+			cache.add(cacheKey, conv);
+		}
 	}
 
 	private void updatePlayerConversations(ConversationThread thread) {

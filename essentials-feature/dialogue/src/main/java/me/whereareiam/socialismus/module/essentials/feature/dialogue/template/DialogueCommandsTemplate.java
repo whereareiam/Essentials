@@ -1,51 +1,46 @@
 package me.whereareiam.socialismus.module.essentials.feature.dialogue.template;
 
 import com.google.inject.Singleton;
-import me.whereareiam.socialismus.api.model.CommandEntity;
-import me.whereareiam.socialismus.api.output.DefaultConfig;
+import me.whereareiam.commandant.model.CommandDefinition;
+import me.whereareiam.configura.TemplateProvider;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.config.DialogueCommands;
 
 import java.util.List;
-import java.util.Map;
 
 @Singleton
-public class DialogueCommandsTemplate implements DefaultConfig<DialogueCommands> {
+public class DialogueCommandsTemplate implements TemplateProvider<DialogueCommands> {
 	@Override
-	public DialogueCommands getDefault() {
-		DialogueCommands config = new DialogueCommands();
-
+	public DialogueCommands supply(DialogueCommands dialogueCommands) {
 		// Default values
-		CommandEntity msg = CommandEntity.builder()
+		CommandDefinition msg = CommandDefinition.builder()
 				.enabled(true)
 				.aliases(List.of("message", "w", "whisper", "tell", "msg"))
 				.permission("")
-				.description("Send a private message to another player.")
+				.description("Send a private message.")
 				.usage("{alias} <recipient> <message>")
-				.cooldown(CommandEntity.Cooldown.builder()
+				.cooldown(CommandDefinition.Cooldown.builder()
 						.enabled(true)
 						.duration(2)
 						.group("global")
 						.build()
 				).build();
 
-		CommandEntity reply = CommandEntity.builder()
+		CommandDefinition reply = CommandDefinition.builder()
 				.enabled(true)
 				.aliases(List.of("reply", "r"))
 				.permission("")
-				.description("Reply to the last private message you received.")
+				.description("Reply to the last private message.")
 				.usage("{alias} <message>")
-				.cooldown(CommandEntity.Cooldown.builder()
+				.cooldown(CommandDefinition.Cooldown.builder()
 						.enabled(true)
 						.duration(2)
 						.group("global")
 						.build()
 				).build();
 
-		config.setCommands(Map.of(
-				"message", msg,
-				"reply", reply
-		));
+		dialogueCommands.getCommands().put("message", msg);
+		dialogueCommands.getCommands().put("reply", reply);
 
-		return config;
+		return dialogueCommands;
 	}
 }

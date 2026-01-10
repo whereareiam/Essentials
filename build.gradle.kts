@@ -32,4 +32,8 @@ subprojects {
         "testImplementation"(rootProject.libs.bundles.testing)
         "testRuntimeOnly"(rootProject.libs.junit.platform)
     }
+
+    tasks.withType<Test> {
+        useJUnitPlatform()
+    }
 }

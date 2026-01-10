@@ -12,13 +12,13 @@ public class FeaturesTemplate implements TemplateProvider<FeaturesConfig> {
 	@Override
 	public FeaturesConfig supply(FeaturesConfig config) {
 		// Default values
-		CommandFeature pm = CommandFeature.builder()
+		CommandFeature dialogue = CommandFeature.builder()
 				.enabled(true)
 				.registerCommands(true)
 				.build();
 
 		config.setFeatures(Map.of(
-				"dialogue", pm
+				"dialogue", dialogue
 		));
 
 		return config;

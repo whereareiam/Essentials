@@ -21,8 +21,8 @@ public class EssentialsMessagesTemplate implements TemplateProvider<EssentialsMe
 				"{features}",
 				" "
 		));
-		featuresCommand.setFeatureFormat(" <dark_gray>- <green>{feature}");
-		featuresCommand.setNoFeatures(" <red>No features available.");
+		featuresCommand.setFeatureFormat("  <dark_gray>- <green>{feature}");
+		featuresCommand.setNoFeatures("  <red>No features available.");
 		commands.setFeaturesCommand(featuresCommand);
 
 		config.setCommands(commands);
