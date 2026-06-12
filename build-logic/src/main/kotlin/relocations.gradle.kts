@@ -1,0 +1,10 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
+plugins {
+    id("com.gradleup.shadow")
+}
+
+tasks.withType<ShadowJar>().configureEach {
+    relocate("com.google.inject", "me.whereareiam.socialismus.library.guice")
+    relocate("com.fasterxml.jackson", "me.whereareiam.socialismus.library.jackson")
+}

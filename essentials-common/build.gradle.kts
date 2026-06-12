@@ -1,3 +1,3 @@
-dependencies {
-    "compileOnly"(project(":essentials-api"))
+plugins {
+    id("shared")
 }

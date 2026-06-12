@@ -1,11 +1,11 @@
-package me.whereareiam.socialismus.module.essentials.feature.dialogue.template;
+package me.whereareiam.socialismus.module.essentials.feature.dialogue.defaults;
 
 import com.google.inject.Singleton;
-import me.whereareiam.configura.TemplateProvider;
+import me.whereareiam.configura.merge.defaults.DefaultsProvider;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.config.DialogueSettings;
 
 @Singleton
-public class DialogueSettingsTemplate implements TemplateProvider<DialogueSettings> {
+public class DialogueSettingsDefaults implements DefaultsProvider<DialogueSettings> {
 	@Override
 	public DialogueSettings supply(DialogueSettings dialogueSettings) {
 		DialogueSettings.Synchronization synchronization = new DialogueSettings.Synchronization();

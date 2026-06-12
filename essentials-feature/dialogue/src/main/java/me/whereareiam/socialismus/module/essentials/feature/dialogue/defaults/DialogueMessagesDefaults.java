@@ -1,11 +1,11 @@
-package me.whereareiam.socialismus.module.essentials.feature.dialogue.template;
+package me.whereareiam.socialismus.module.essentials.feature.dialogue.defaults;
 
 import com.google.inject.Singleton;
-import me.whereareiam.configura.TemplateProvider;
+import me.whereareiam.configura.merge.defaults.DefaultsProvider;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.config.DialogueMessages;
 
 @Singleton
-public class DialogueMessagesTemplate implements TemplateProvider<DialogueMessages> {
+public class DialogueMessagesDefaults implements DefaultsProvider<DialogueMessages> {
 	@Override
 	public DialogueMessages supply(DialogueMessages dialogueMessages) {
 		// Default values

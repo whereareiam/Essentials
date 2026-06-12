@@ -1,33 +1,48 @@
 [versions]
 
 # plugins
-shadow = "9.3.0"
+shadow = "9.4.2"
+toolkit = "dev-8c0271b"
 
-socialismus = "dev-c34993b"
+socialismus = "dev-7e469f0"
 
 # compile time processing
-lombok = "1.18.42"
+lombok = "1.18.46"
 
 # general
+guice = "7.0.0"
 cloud = "2.0.0"
+adventure = "4.25.0"
+annotations = "26.1.0"
+commandant = "dev-42806f6"
+keystone = "dev-fcd11fd"
 
 # testing
-junit = "6.0.1"
-mockito = "5.20.0"
+junit = "6.1.0"
+mockito = "5.23.0"
 
 [libraries]
 
-socialismus = { group = "me.whereareiam", name = "Socialismus", version.ref = "socialismus" }
+# plugins
+shadow-gradle-plugin = { group = "com.gradleup.shadow", name = "shadow-gradle-plugin", version.ref = "shadow" }
+toolkit-publish-maven = { group = "me.whereareiam.toolkit", name = "publish-maven", version.ref = "toolkit" }
+
+socialismus-module-api = { group = "me.whereareiam.socialismus.module", name = "api", version.ref = "socialismus" }
 
 # compile time processing
 lombok = { group = "org.projectlombok", name = "lombok", version.ref = "lombok" }
 
 # general
+guice = { group = "com.google.inject", name = "guice", version.ref = "guice" }
 cloud-annotations = { group = "org.incendo", name = "cloud-annotations", version.ref = "cloud" }
+adventure = { group = "net.kyori", name = "adventure-api", version.ref = "adventure" }
+annotations = { group = "org.jetbrains", name = "annotations", version.ref = "annotations" }
+commandant = { group = "me.whereareiam", name = "commandant", version.ref = "commandant" }
+keystone = { group = "me.whereareiam", name = "keystone", version.ref = "keystone" }
 
 # testing
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit" }
-junit-platform = { group = "org.junit.platform", name = "junit-platform-launcher" }
+junit-platform = { group = "org.junit.platform", name = "junit-platform-launcher", version.ref = "junit" }
 mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
 mockito-junit = { group = "org.mockito", name = "mockito-junit-jupiter", version.ref = "mockito" }
 

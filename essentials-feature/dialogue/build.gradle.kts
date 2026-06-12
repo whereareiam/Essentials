@@ -1,5 +1,9 @@
+plugins {
+    id("shared")
+}
+
 dependencies {
-    "compileOnly"(rootProject.libs.cloud.annotations)
-    
-    "testImplementation"(rootProject.libs.socialismus)
+    compileOnly(rootProject.libs.commandant)
+    compileOnly(rootProject.libs.cloud.annotations)
+    testImplementation(rootProject.libs.socialismus.module.api)
 }

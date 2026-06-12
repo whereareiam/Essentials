@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import me.whereareiam.configura.annotation.Polymorphic;
+import me.whereareiam.configura.feature.polymorphic.api.annotation.Polymorphic;
 
 @Getter
 @ToString

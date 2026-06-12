@@ -1,11 +1,7 @@
-subprojects {
-    dependencies {
-        "compileOnly"(project(":essentials-api"))
-    }
+plugins {
+    id("shared")
 }
 
 dependencies {
-    subprojects.forEach {
-        "implementation"(it)
-    }
+    implementation(project(":essentials-feature:dialogue"))
 }

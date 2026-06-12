@@ -1,4 +1,8 @@
+plugins {
+    id("shared")
+}
+
 dependencies {
-    "compileOnly"(project(":essentials-api"))
-    "compileOnly"(libs.cloud.annotations)
+    compileOnly(libs.commandant)
+    compileOnly(libs.cloud.annotations)
 }

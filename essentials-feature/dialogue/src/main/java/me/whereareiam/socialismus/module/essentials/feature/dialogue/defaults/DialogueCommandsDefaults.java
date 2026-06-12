@@ -1,14 +1,14 @@
-package me.whereareiam.socialismus.module.essentials.feature.dialogue.template;
+package me.whereareiam.socialismus.module.essentials.feature.dialogue.defaults;
 
 import com.google.inject.Singleton;
-import me.whereareiam.commandant.model.CommandDefinition;
-import me.whereareiam.configura.TemplateProvider;
+import me.whereareiam.configura.merge.defaults.DefaultsProvider;
+import me.whereareiam.socialismus.model.CommandDefinition;
 import me.whereareiam.socialismus.module.essentials.feature.dialogue.config.DialogueCommands;
 
 import java.util.List;
 
 @Singleton
-public class DialogueCommandsTemplate implements TemplateProvider<DialogueCommands> {
+public class DialogueCommandsDefaults implements DefaultsProvider<DialogueCommands> {
 	@Override
 	public DialogueCommands supply(DialogueCommands dialogueCommands) {
 		// Default values

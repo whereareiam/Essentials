@@ -1,8 +1,6 @@
-rootProject.name = "Essentials"
+rootProject.name = "build-logic"
 
 pluginManagement {
-    includeBuild("build-logic")
-
     repositories {
         gradlePluginPortal()
         mavenCentral()
@@ -12,19 +10,16 @@ pluginManagement {
 }
 
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
-
     repositories {
+        gradlePluginPortal()
         mavenCentral()
         maven("https://maven.whereareiam.me/release")
         maven("https://maven.whereareiam.me/development")
     }
+
+    versionCatalogs {
+        create("libs") {
+            from(files("../gradle/libs.versions.toml"))
+        }
+    }
 }
-
-include("essentials-feature")
-include("essentials-feature:dialogue")
-
-include("essentials-bootstrap")
-include("essentials-command")
-include("essentials-common")
-include("essentials-api")
